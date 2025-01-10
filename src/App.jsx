@@ -15,6 +15,7 @@ import BannerPage from "./pages/BannerPage";
 import OrderPage from "./pages/OrderDetailPage";
 import CreateSimpleProduct from "./pages/CreateSimpleProduct";
 import BannerPreview from "./pages/PreviewBanner";
+import ProductGroupPage from "./pages/ProductGroupPage";
 
 function App() {
 	const location = useLocation();
@@ -41,6 +42,7 @@ function App() {
 					<Route path="/" element={<OverviewPage />} />
 					<Route path="/products" element={<ProductsPage />} />
 					<Route path="/post-products" element={<PostProduct />} />
+					<Route path="/post-simple-product" element={<CreateSimpleProduct />} />
 					<Route path="/users" element={<UsersPage />} />
 					<Route path="/category" element={<Category />} />
 					<Route path="/orders" element={<OrdersPage />} />
@@ -49,8 +51,8 @@ function App() {
 					<Route path="/settings" element={<SettingsPage />} />
 					<Route path="/login" element={<Login />} />
 					<Route path="/order-details" element={<OrderPage />} />
-					<Route path="/post-simple-product" element={<CreateSimpleProduct />} />
 					<Route path="/preview-banner" element={<BannerPreview />} />
+					<Route path="/productGroupPage" element={ <ProductGroupPage />} />
 				</Routes>
 			</div>
 		</div>

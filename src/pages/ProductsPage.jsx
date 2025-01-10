@@ -4,6 +4,7 @@ import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 import { AlertTriangle, DollarSign, Package, TrendingUp } from "lucide-react";
 import ProductsTable from "../components/products/ProductsTable";
@@ -12,6 +13,7 @@ import { useEffect, useState } from "react";
 const ProductsPage = () => {
 
 	const [products, setProducts] = useState([]);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const getProducts = async () => {
@@ -42,7 +44,10 @@ const ProductsPage = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1 }}
 				>
-					<StatCard name='Total Products' icon={Package} value={products.length} color='#6366F1' />
+					{/* <StatCard name='Total Products' icon={Package} value={products.length} color='#6366F1' /> */}
+					<button onClick={() => navigate("/post-products")} className='bg-blue-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700' style={{ height: "100px" }}> CREATE ATTRIBUTED PRODUCT </button>
+					<button onClick={() => navigate("/post-simple-product")} className='bg-blue-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700' style={{ height: "100px" }}
+					> CREATE SIMPLE PRODUCT </button>
 				</motion.div>
 
 				<ProductsTable data={products} />

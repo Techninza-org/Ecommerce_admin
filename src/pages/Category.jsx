@@ -11,6 +11,8 @@ const Category = () => {
   const [parentId, setParentId] = useState(""); // Selected parent category ID
   const [categoryId, setCategoryId] = useState(""); // Selected category ID to delete
   const token = Cookies.get("token");
+  const [categoryIcon, setCategoryIcon] = useState(null);
+  const [categoryImage, setCategoryImage] = useState(null);
 
   // Fetch categories on component mount
   useEffect(() => {
@@ -36,16 +38,24 @@ const Category = () => {
     e.preventDefault();
 
     try {
+
+      const formData = new FormData();
+      formData.append("categoryName", categoryName);
+      formData.append("icon", categoryIcon);
+      formData.append("image", categoryImage);
+
       const response = await axios.post(
         "http://45.198.14.69:3000/api/admin/createCategory",
-        { categoryName: categoryName },
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            // "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
       alert("Parent category created successfully!");
       console.log("Parent Response:", response.data);
     } catch (error) {
@@ -123,9 +133,7 @@ const Category = () => {
           <h3 className="text-xl font-semibold text-gray-100 mb-4">Add New Parent Category</h3>
           <form onSubmit={handleParentSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
-                Category Name
-              </label>
+              <label className="block text-sm font-medium text-gray-200 mb-2"> Category Name </label>
               <input
                 type="text"
                 value={categoryName}
@@ -133,6 +141,26 @@ const Category = () => {
                 required
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter category name"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-200 mb-2">Upload Category Icon</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setCategoryIcon(e.target.files[0])}
+                required
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-200 mb-2">Upload Category Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setCategoryImage(e.target.files[0])}
+                required
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>

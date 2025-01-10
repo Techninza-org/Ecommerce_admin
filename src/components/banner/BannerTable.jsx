@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Eye, ToggleRight, ToggleLeft } from "lucide-react";
+import { Search, Eye, ToggleRight, ToggleLeft, Trash, Trash2Icon, LucideTrash2 } from "lucide-react";
 import axios from "axios";
 
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import APIs from "../../utilities/api";
 
 const orderData = [
 	{ id: "ORD001", customer: "John Doe", total: 235.4, status: "Delivered", date: "2023-07-01" },
@@ -82,6 +83,40 @@ const BannerTable = ({ data }) => {
 		navigate("/preview-banner", {state: {banner: banner}})
 	}
 
+	const handleDeleteBanner = async (bannerId) => {
+		console.log("inside handleDeleteBanner");
+
+		const isConfirmed = window.confirm("Are you sure you want to delete this banner?");
+		if (!isConfirmed){return;}
+
+		const token = Cookies.get("token");
+
+		try {
+			const response = await axios.delete(APIs.BASE_URL_FOR_API+"api/admin/deleteBanner",
+				{
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					data: {
+						bannerId: bannerId
+					}
+				}
+			);
+
+			if (response.status === 200) {
+				const updatedBanners = filteredBanner.filter((banner) => banner.id !== bannerId);
+				setFilteredBanner(updatedBanners);
+				alert(`message: ${response.data.message}, status: ${response.status}`);
+			}
+
+			console.log(`delete banner response: ${response.data}`);
+		} catch (error) {
+			console.log("Error deleting banner: ", error);
+		}
+		
+	};
+
 	return (
 		<motion.div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700' initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
 			<div className='flex justify-between items-center mb-6'>
@@ -105,6 +140,7 @@ const BannerTable = ({ data }) => {
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center'> Date </th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center'> Active / In-Active </th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center'> Preview </th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center'> Actions </th>
 							{/* <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'> Actions </th> */}
 						</tr>	
 					</thead>
@@ -126,6 +162,10 @@ const BannerTable = ({ data }) => {
 
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center'>
 									<button onClick={()=> handleBannerPreview(banner)}> {<Eye/>}</button>
+								</td>
+
+								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center'>
+									<button onClick={()=> handleDeleteBanner(banner.id)}> {<LucideTrash2/>}</button>
 								</td>
                                 
 							</motion.tr>
