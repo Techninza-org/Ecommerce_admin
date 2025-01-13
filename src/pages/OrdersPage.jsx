@@ -9,6 +9,8 @@ import OrderDistribution from "../components/orders/OrderDistribution";
 import OrdersTable from "../components/orders/OrdersTable";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { isAuthenticated } from "../utilities/jwt";
+import { useNavigate } from "react-router-dom";
 
 const orderStats = {
 	totalOrders: "1,234",
@@ -20,11 +22,13 @@ const orderStats = {
 const OrdersPage = () => {
 
 	const [orders, setOrders] = useState([]);
+	const navigate = useNavigate();
 
 	const token = Cookies.get("token");
 	// const serverUrl = "http://45.198.14.69:3000/api/seller/allSellerOrders"
 
 	useEffect(() => {
+
 		const getOrders = async () => {
 			const response = await axios.get("http://45.198.14.69:3000/api/seller/allSellerOrders", {
 				headers: {

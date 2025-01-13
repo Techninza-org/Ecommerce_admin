@@ -4,12 +4,14 @@ import { Eye, ToggleLeft, ToggleRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import APIs from "../../utilities/api";
 import Cookie from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 
 const ProductGroupTable = ({ record }) => {
     console.log(record, 'record');
 
     const [productGroupList, setProductGroupList] = useState([{}]);
+    const navigation = useNavigate();
 
     const token = Cookie.get("token");
 
@@ -48,6 +50,14 @@ const ProductGroupTable = ({ record }) => {
         } catch (error) {
             console.log("Error toggling product status:", error);
         }
+    };
+
+    const handleProductGroupView = (productGroup) => {
+        console.log("Product Group ID: ", productGroup);
+
+        // Redirect to the product group view page by navigating to the URL
+        // window.location.href = `/product-group-details/${productGroupId}`;
+        navigation("/previewProductGroup", { state: { productGroup } });
     };
 
 
@@ -90,7 +100,7 @@ const ProductGroupTable = ({ record }) => {
                                 </td>
 
                                 <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center'>
-                                    <button className="text-red-400 hover:text-red-300"> {<Eye color="white"/>}</button>
+                                    <button className="text-red-400 hover:text-red-300" onClick={() => handleProductGroupView(productGroup)}> {<Eye color="white"/>}</button>
                                 </td>
                             </motion.tr>
                         ))}

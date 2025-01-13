@@ -6,8 +6,12 @@ import StatCard from "../components/common/StatCard";
 import SalesOverviewChart from "../components/overview/SalesOverviewChart";
 import CategoryDistributionChart from "../components/overview/CategoryDistributionChart";
 import SalesChannelChart from "../components/overview/SalesChannelChart";
+import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../utilities/jwt";
+import { useEffect } from "react";
 
 const OverviewPage = () => {
+
 	return (
 		<div className='flex-1 overflow-auto relative z-10'>
 			<Header title='Overview' />

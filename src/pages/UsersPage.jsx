@@ -9,6 +9,9 @@ import UserActivityHeatmap from "../components/users/UserActivityHeatmap";
 import UserDemographicsChart from "../components/users/UserDemographicsChart";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { isAuthenticated } from "../utilities/jwt";
+import { useNavigate } from "react-router-dom";
+import Cookie from "js-cookie";
 
 const userStats = {
 	totalUsers: 152845,
@@ -20,10 +23,12 @@ const userStats = {
 const UsersPage = () => {
 
 	const [users, setUsers] = useState([]);
+	const navigate = useNavigate();
 
-	const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoxLCJpYXQiOjE3MzU4MDEyMzMsImV4cCI6MTczNjY2NTIzM30.WA0FMrgLNw7Z3xFI_oOgXxqzJdDKugyL97huh4n31DI"
+	const token = Cookies.get("token");
 
 	useEffect(() => {
+		
 		const getUsers = async () => {
 			const response = await axios.get("http://45.198.14.69:3000/api/admin/getAllUsers", {
 				headers: {

@@ -7,6 +7,7 @@ import StatCard from "../components/common/StatCard";
 import BannerTable from "../components/banner/BannerTable";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { isAuthenticated } from "../utilities/jwt";
 
 const orderStats = {
 	totalOrders: "1,234",

@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { AlertTriangle, DollarSign, Package, TrendingUp } from "lucide-react";
 import ProductsTable from "../components/products/ProductsTable";
 import { useEffect, useState } from "react";
+import { isAuthenticated } from "../utilities/jwt";
 
 const ProductsPage = () => {
 
@@ -16,6 +17,7 @@ const ProductsPage = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		
 		const getProducts = async () => {
 			const response = await axios.get("http://45.198.14.69:3000/api/admin/getAllProducts", {
 				headers: {

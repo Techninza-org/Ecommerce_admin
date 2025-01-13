@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../components/common/Header";
 import Cookies from "js-cookie";
+import { isAuthenticated } from "../utilities/jwt";
+import { useNavigate } from "react-router-dom";
 
 const CreateSimpleProduct = () => {
 	const [formData, setFormData] = useState({
@@ -18,8 +20,10 @@ const CreateSimpleProduct = () => {
 	const [availableTags, setAvailableTags] = useState(["LATEST", "PREMIUM", "SALE", "FRIDAY SALE"]);
 	const [error, setError] = useState("");
 	const token = Cookies.get("token");
+	const navigate = useNavigate();
 
 	useEffect(() => {
+		
 		const fetchData = async () => {
 			try {
 				const categoriesResponse = await axios.get("http://45.198.14.69:3000/api/seller/getAllCategories", {

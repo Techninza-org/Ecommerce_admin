@@ -46,7 +46,10 @@ const ProductGroupPage = () => {
 						Authorization: `Bearer ${Cookies.get("token")}`,
 					},
 				});
-				setProducts(response.data.products); // Assume API returns an array of product objects
+
+				const activeProductsOnly = response.data.products.filter((product) => product.isActive);
+				// setProducts(response.data.products); // Assume API returns an array of product objects
+				setProducts(activeProductsOnly); // Assume API returns an array of product objects
 			} catch (error) {
 				console.error("Error fetching products:", error);
 			}
@@ -63,6 +66,11 @@ const ProductGroupPage = () => {
 			isActive: isActive,
 			productIds: selectedProducts,
 		};
+
+		if(payload.productIds.length < 1) {
+			alert("Please select at least one product to create a group.");
+			return;
+		}
 
 		try {
 			await axios.post("http://45.198.14.69/api/seller/createProductGroup", payload, {
@@ -130,9 +138,9 @@ const ProductGroupPage = () => {
 								id="groupDesc"
 								value={groupDesc}
 								onChange={(e) => setGroupDesc(e.target.value)}
-								required
+								// required
 								className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-								placeholder="Enter group description"
+								placeholder="Enter group description (optional)"
 							/>
 						</div>
 						<div>

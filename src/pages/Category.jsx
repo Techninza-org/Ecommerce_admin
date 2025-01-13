@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../components/common/Header";
 import Cookies from "js-cookie";
+import { isAuthenticated } from "../utilities/jwt";
 
 const Category = () => {
   const [categoryName, setCategoryName] = useState(""); // For parent category input

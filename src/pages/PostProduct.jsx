@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../components/common/Header";
 import Cookies from "js-cookie";
+import { isAuthenticated } from "../utilities/jwt";
 
 const PostProductsPage = () => {
 	const [formData, setFormData] = useState({
@@ -99,6 +100,21 @@ const PostProductsPage = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
+		if (formData.categoryIds.length === 0) {
+			alert("Please select at least one category.");
+			return;
+		}
+
+		if (formData.imagesUrls.length === 0) {
+			alert("Please upload at least one image.");
+			return
+		}
+
+		if (formData.attributesJson.some((attribute) => attribute.fields.some((field) => field.name === "" || field.value === "") || attribute.price === "")) {
+			alert("Please fill all attribute fields.");
+			return;
+		}
+
 		try {
 			const response = await axios.post(
 				"http://45.198.14.69:3000/api/seller/createAttributeProduct",
@@ -115,7 +131,7 @@ const PostProductsPage = () => {
 			console.log(response.data);
 		} catch (error) {
 			console.error("Error submitting product:", error.response?.data || error.message);
-			alert("Failed to submit the product. Please try again.");
+			alert(`${error.response?.data?.message || error.message}` );
 		}
 	};
 
@@ -290,14 +306,14 @@ const PostProductsPage = () => {
 									<div key={fieldIndex} className="flex space-x-4 mb-2">
 										<input
 											type="text"
-											placeholder="Name"
+											placeholder="Field Key"
 											value={field.name}
 											onChange={(e) => handleNestedChange(index, fieldIndex, "name", e.target.value)}
 											className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 										/>
 										<input
 											type="text"
-											placeholder="Value"
+											placeholder="Field Value"
 											value={field.value}
 											onChange={(e) => handleNestedChange(index, fieldIndex, "value", e.target.value)}
 											className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -312,9 +328,6 @@ const PostProductsPage = () => {
 
 						<button type="button" onClick={handleAddAttribute} className="text-blue-500 text-sm">+ Add Attribute Group</button>
 
-						<div>
-							<button type="submit" className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-400"> Submit </button>
-						</div>
 
 						<div>
 							<label className="block text-sm font-medium text-gray-200 mb-2">Upload Images</label>
@@ -324,6 +337,10 @@ const PostProductsPage = () => {
 								onChange={handleFileChange}
 								className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>
+						</div>
+
+						<div>
+							<button type="submit" className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-400"> Submit </button>
 						</div>
 
 					</form>

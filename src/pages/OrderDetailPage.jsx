@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion";
 import AddressCard from "../components/address/AddressCard";
 import OrderProductCard from "../components/orders/OrderProductCard";
+import Cookie from "js-cookie";
+import { isAuthenticated } from "../utilities/jwt";
 
 const OrderPage = () => {
     const location = useLocation();
     const { order } = location.state || {};
-
-    console.log(order, 'order details');
 
     if (!order) {
         return (

@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import Sidebar from "./components/common/Sidebar";
 
@@ -16,10 +16,19 @@ import OrderPage from "./pages/OrderDetailPage";
 import CreateSimpleProduct from "./pages/CreateSimpleProduct";
 import BannerPreview from "./pages/PreviewBanner";
 import ProductGroupPage from "./pages/ProductGroupPage";
+import PreviewProductGroup from "./pages/ProductGroupDetails";
+import { isAuthenticated } from "./utilities/jwt";
+import { useEffect } from "react";
 
 function App() {
 	const location = useLocation();
 	const isLoginPage = location.pathname === '/login';
+	const navigate = useNavigate();
+
+	// if (!isAuthenticated()) { navigate("/login"); }
+	useEffect(() => {
+		if (!isAuthenticated()) {navigate("/login");}
+	}, []);
 
 	return (
 		<div className={`flex h-screen ${isLoginPage ? 'bg-gray-100' : 'bg-gray-900 text-gray-100 overflow-hidden'}`}>
@@ -53,6 +62,7 @@ function App() {
 					<Route path="/order-details" element={<OrderPage />} />
 					<Route path="/preview-banner" element={<BannerPreview />} />
 					<Route path="/productGroupPage" element={ <ProductGroupPage />} />
+					<Route path="/previewProductGroup" element={ <PreviewProductGroup />} />
 				</Routes>
 			</div>
 		</div>

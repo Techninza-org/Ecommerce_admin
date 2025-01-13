@@ -50,7 +50,7 @@ const ProductsTable = ({ data }) => {
 	};
 
 	// Function to handle the Trash2 button click
-	const handleDelete = async (productId) => {
+	const handleToggle = async (productId) => {
 		try {
 			// API call to toggle the product's active status
 			const response = await axios.put(
@@ -72,6 +72,38 @@ const ProductsTable = ({ data }) => {
 			);
 		} catch (error) {
 			console.error('Error toggling product status:', error);
+		}
+	};
+
+	const handleDelete = async (productId) => {
+
+		const isConfirmed = window.confirm("Are you sure you want to delete this product?") || alert("Product deletion cancelled.");
+		if (!isConfirmed) {return;}
+		
+		try {
+			
+			const response = await axios.delete(`${APIs.BASE_URL_FOR_API}api/seller/deleteProductById/${productId}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					}
+				}
+			)
+
+			console.log(response.data);
+
+			if (response.status === 200) {
+
+				alert(`${response.data.message} | Product ID: ${response.data.deletedProduct.id}`);
+				setFilteredProducts((prevProducts) =>
+					prevProducts.filter((product) => product.id !== productId)
+				);
+			}else {
+				alert(`${response.data.message}`);
+			}
+
+		} catch (error) {
+			console.error('Error deleting product:', error);
 		}
 	};
 
@@ -149,12 +181,12 @@ const ProductsTable = ({ data }) => {
 								<td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{product?.isActive ? 'true' : 'false'}</td>
 								
 								<td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-									<button className="text-indigo-400 hover:text-indigo-300 mr-2"><Edit size={20} /></button>
-									{/* <button className="text-red-400 hover:text-red-300" onClick={()=> handleDelete(product.id)}><Trash2 size={20} /></button> */}
+									{/* <button className="text-indigo-400 hover:text-indigo-300 mr-2"><Edit size={20} /></button> */}
+									<button className="text-red-400 hover:text-red-300" onClick={()=> handleDelete(product.id)}><Trash2 size={20} /></button>
 								</td>
 								
 								<td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-									<button className="text-red-400 hover:text-red-300" onClick={()=> handleDelete(product.id)}> {product.isActive ? (<ToggleRight size={20} color="green"/>) : (<ToggleLeft size={20} color="red" />)}</button>
+									<button className="text-red-400 hover:text-red-300" onClick={()=> handleToggle(product.id)}> {product.isActive ? (<ToggleRight size={20} color="green"/>) : (<ToggleLeft size={20} color="red" />)}</button>
 								</td>
 							</motion.tr>
 						))}
