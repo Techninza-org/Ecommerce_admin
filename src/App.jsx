@@ -25,7 +25,6 @@ function App() {
 	const isLoginPage = location.pathname === '/login';
 	const navigate = useNavigate();
 
-	// if (!isAuthenticated()) { navigate("/login"); }
 	useEffect(() => {
 		if (!isAuthenticated()) {navigate("/login");}
 	}, []);

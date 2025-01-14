@@ -6,17 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 import Cookies from "js-cookie";
 
-const orderData = [
-	{ id: "ORD001", customer: "John Doe", total: 235.4, status: "Delivered", date: "2023-07-01" },
-	{ id: "ORD002", customer: "Jane Smith", total: 412.0, status: "Processing", date: "2023-07-02" },
-	{ id: "ORD003", customer: "Bob Johnson", total: 162.5, status: "Shipped", date: "2023-07-03" },
-	{ id: "ORD004", customer: "Alice Brown", total: 750.2, status: "Pending", date: "2023-07-04" },
-	{ id: "ORD005", customer: "Charlie Wilson", total: 95.8, status: "Delivered", date: "2023-07-05" },
-	{ id: "ORD006", customer: "Eva Martinez", total: 310.75, status: "Processing", date: "2023-07-06" },
-	{ id: "ORD007", customer: "David Lee", total: 528.9, status: "Shipped", date: "2023-07-07" },
-	{ id: "ORD008", customer: "Grace Taylor", total: 189.6, status: "Delivered", date: "2023-07-08" },
-];
-
 const OrdersTable = ({ data }) => {
 
 	console.log(data, 'order table');
@@ -32,10 +21,13 @@ const OrdersTable = ({ data }) => {
 	const handleSearch = (e) => {
 		const term = e.target.value.toLowerCase();
 		setSearchTerm(term);
-		const filtered = orderData.filter(
-			(order) => order.id.toLowerCase().includes(term) || order.customer.toLowerCase().includes(term)
-		);
-		setFilteredOrders(filtered);
+		const filtered = filteredOrders.filter((order) =>  String(order.id).includes(term) || order.user.name.toLowerCase().includes(term) || String(order.orderAddress.pincode).includes(term));
+
+		if (!term) {
+			setFilteredOrders(data);
+		} else {
+			setFilteredOrders(filtered);
+		}
 	};
 
 	const handleStatusChange = async (orderId, newStatus) => {
@@ -148,7 +140,7 @@ const OrdersTable = ({ data }) => {
 									</select>
 								</td>
 
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center'>
+								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center hover:text-blue-300'>
 									<button onClick={() => handleRedirectToOrderPage(order)}><Eye/></button>
 								</td>
 							</motion.tr>

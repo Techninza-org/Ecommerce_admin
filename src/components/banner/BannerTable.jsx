@@ -160,11 +160,11 @@ const BannerTable = ({ data }) => {
 									<button onClick={()=> handleActiveUnActiveToggle(banner.id)}> {banner.isActive ? (<ToggleRight size={24} color="green"/>) : (<ToggleLeft size={24} color="red" />)}</button>
 								</td>
 
-								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center'>
+								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center hover:text-green-200'>
 									<button onClick={()=> handleBannerPreview(banner)}> {<Eye/>}</button>
 								</td>
 
-								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center'>
+								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center hover:text-red-600'>
 									<button onClick={()=> handleDeleteBanner(banner.id)}> {<LucideTrash2/>}</button>
 								</td>
                                 

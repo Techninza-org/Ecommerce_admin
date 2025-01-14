@@ -1,6 +1,6 @@
 import axios from "axios";
 import { motion } from "framer-motion";
-import { Eye, ToggleLeft, ToggleRight } from "lucide-react";
+import { Eye, ToggleLeft, ToggleRight, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import APIs from "../../utilities/api";
 import Cookie from "js-cookie";
@@ -60,6 +60,30 @@ const ProductGroupTable = ({ record }) => {
         navigation("/previewProductGroup", { state: { productGroup } });
     };
 
+    const handleDelete = async (productId) => {
+
+        const confirmDelete = window.confirm("Are you sure you want to delete this product group?");
+        if (!confirmDelete) { return; }
+
+        try {
+            const response = await axios.delete(`${APIs.BASE_URL_FOR_API}api/seller/deleteProductGroup/${productId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 200) {
+                const updatedProductGroup = productGroupList.filter((productGroup) => productGroup.id !== productId);
+                setProductGroupList(updatedProductGroup);
+            } else {
+                alert(`message: ${response.data.message} | status: ${response.status}`);
+                console.log("Error deleting product group");
+            }
+        } catch (error) {
+            console.error("Error deleting product group:", error);
+        }
+    };
+
 
     return (
         <motion.div
@@ -83,6 +107,7 @@ const ProductGroupTable = ({ record }) => {
                             <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center'> Total Products </th>
                             <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center'> Change Stataus </th>
                             <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center'> Action </th>
+                            <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center'> Preview </th>
                         </tr>
                     </thead>
 
@@ -96,11 +121,15 @@ const ProductGroupTable = ({ record }) => {
                                 <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center'>{productGroup?.products?.length || 0}</td>
 
                                 <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center'>
-                                    <button className="text-red-400 hover:text-red-300" onClick={()=> handleStatusToggle(productGroup.id)}> {productGroup.isActive ? (<ToggleRight size={20} color="green"/>) : (<ToggleLeft size={20} color="red" />)}</button>
+                                    <button onClick={()=> handleStatusToggle(productGroup.id)}> {productGroup.isActive ? (<ToggleRight size={20} color="green"/>) : (<ToggleLeft size={20} color="red" />)}</button>
                                 </td>
 
                                 <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center'>
-                                    <button className="text-red-400 hover:text-red-300" onClick={() => handleProductGroupView(productGroup)}> {<Eye color="white"/>}</button>
+                                <button className="text-white-400 hover:text-red-600" onClick={() => handleDelete(productGroup.id)}> {<Trash2/>}</button>
+                                </td>
+
+                                <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center'>
+                                    <button className="text-white-400 hover:text-blue-300" onClick={() => handleProductGroupView(productGroup)}> {<Eye/>}</button>
                                 </td>
                             </motion.tr>
                         ))}

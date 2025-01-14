@@ -23,9 +23,8 @@ const userStats = {
 const UsersPage = () => {
 
 	const [users, setUsers] = useState([]);
-	const navigate = useNavigate();
 
-	const token = Cookies.get("token");
+	const token = Cookie.get("token");
 
 	useEffect(() => {
 		

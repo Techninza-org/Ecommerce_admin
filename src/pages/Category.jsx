@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../components/common/Header";
 import Cookies from "js-cookie";
-import { isAuthenticated } from "../utilities/jwt";
 
 const Category = () => {
   const [categoryName, setCategoryName] = useState(""); // For parent category input
@@ -118,6 +117,7 @@ const Category = () => {
       alert("Failed to delete category. Please try again.");
     }
   };
+  
 
   return (
     <div className="flex-1 overflow-auto relative z-10">
@@ -197,6 +197,7 @@ const Category = () => {
                 placeholder="Enter child category name"
               />
             </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-200 mb-2">
                 Select Parent Category
@@ -215,13 +216,9 @@ const Category = () => {
                 ))}
               </select>
             </div>
+            
             <div>
-              <button
-                type="submit"
-                className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
-              >
-                Submit
-              </button>
+              <button type="submit" className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-400"> Submit </button>
             </div>
           </form>
         </motion.div>
