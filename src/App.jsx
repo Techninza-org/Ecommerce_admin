@@ -19,6 +19,7 @@ import ProductGroupPage from "./pages/ProductGroupPage";
 import PreviewProductGroup from "./pages/ProductGroupDetails";
 import { isAuthenticated } from "./utilities/jwt";
 import { useEffect } from "react";
+import CouponPage from "./pages/CouponPage";
 
 function App() {
 	const location = useLocation();
@@ -62,6 +63,7 @@ function App() {
 					<Route path="/preview-banner" element={<BannerPreview />} />
 					<Route path="/productGroupPage" element={ <ProductGroupPage />} />
 					<Route path="/previewProductGroup" element={ <PreviewProductGroup />} />
+					<Route path="/coupon" element={ <CouponPage />} />
 				</Routes>
 			</div>
 		</div>

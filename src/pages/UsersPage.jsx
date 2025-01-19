@@ -12,6 +12,7 @@ import axios from "axios";
 import { isAuthenticated } from "../utilities/jwt";
 import { useNavigate } from "react-router-dom";
 import Cookie from "js-cookie";
+import APIs from "../utilities/api";
 
 const userStats = {
 	totalUsers: 152845,
@@ -29,7 +30,7 @@ const UsersPage = () => {
 	useEffect(() => {
 		
 		const getUsers = async () => {
-			const response = await axios.get("http://45.198.14.69:3000/api/admin/getAllUsers", {
+			const response = await axios.get(`${APIs.BASE_URL_FOR_API}api/admin/getAllUsers`, {
 				headers: {
 					Authorization: `Bearer ${token}`
 				}
