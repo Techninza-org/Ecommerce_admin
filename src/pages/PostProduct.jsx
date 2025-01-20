@@ -19,6 +19,7 @@ const PostProductsPage = () => {
 	});
 
 	const [categories, setCategories] = useState([]);
+	const [availableFields, setAvailableFields] = useState([]);
 	const [availableTags, setAvailableTags] = useState(["LATEST", "PREMIUM", "SALE", "FRIDAY SALE"]);
 
 	const token = Cookies.get("token");
@@ -34,9 +35,16 @@ const PostProductsPage = () => {
 				// 	headers: { Authorization: `Bearer ${token}` },
 				// });
 
+				const fieldsResponse = await axios.get(
+					"http://45.198.14.69/api/admin/getFields",
+					{ headers: { Authorization: `Bearer ${token}` } }
+				);
+
 				setCategories(categoriesResponse.data.categories);
+				setAvailableFields(fieldsResponse.data.fields);
 
 				console.log('category: ', categoriesResponse.data.categories)
+				console.log('fields: ', fieldsResponse.data.fields)
 				// setAvailableTags(tagsResponse.data);
 			} catch (error) {
 				console.error("Error fetching categories or tags:", error);
@@ -100,6 +108,8 @@ const PostProductsPage = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
+		console.log("Form Data 1:", formData);
+
 		if (formData.categoryIds.length === 0) {
 			alert("Please select at least one category.");
 			return;
@@ -131,7 +141,7 @@ const PostProductsPage = () => {
 			console.log(response.data);
 		} catch (error) {
 			console.error("Error submitting product:", error.response?.data || error.message);
-			alert(`${error.response?.data?.message || error.message}` );
+			alert(`${error.response?.data?.message || error.message}`);
 		}
 	};
 
@@ -284,7 +294,7 @@ const PostProductsPage = () => {
 						</div>
 
 
-						{formData.attributesJson.map((attribute, index) => (
+						{/* {formData.attributesJson.map((attribute, index) => (
 							<div key={index}>
 								<h4 className="text-sm text-gray-300 mb-2">Attributes Group {index + 1}</h4>
 								<div className="mb-2">
@@ -324,10 +334,80 @@ const PostProductsPage = () => {
 								<button type="button" onClick={() => handleAddField(index)} className="text-blue-500 text-sm">+ Add Field</button>
 
 							</div>
+						))} */}
+
+						{/* <button type="button" onClick={handleAddAttribute} className="text-blue-500 text-sm">+ Add Attribute Group</button> */}
+
+						{/* Attributes */}
+						{formData.attributesJson.map((attribute, index) => (
+							<div key={index}>
+								<h4 className="text-sm text-gray-300 mb-2">Attributes Group {index + 1}</h4>
+								<div className="mb-2">
+									<label className="block text-sm text-gray-200">Price</label>
+									<input
+										type="number"
+										placeholder="Price"
+										value={attribute.price}
+										onChange={(e) => {
+											const updatedAttributes = [...formData.attributesJson];
+											updatedAttributes[index].price = parseFloat(e.target.value);
+											setFormData({ ...formData, attributesJson: updatedAttributes });
+										}}
+										className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+									/>
+								</div>
+								{attribute.fields.map((field, fieldIndex) => (
+									<div key={fieldIndex} className="flex space-x-4 mb-2">
+										{/* Field Key */}
+										<select
+											value={field.keyId}	
+											onChange={(e) => handleNestedChange(index, fieldIndex, "keyId", e.target.value)}
+											className="w-1/2 bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+										>
+											<option value="">Select Field Key</option>
+											{availableFields.map((fieldData) => (
+												<option key={fieldData.id} value={fieldData.id}>
+													{fieldData.keyName}
+												</option>
+											))}
+										</select>
+
+										{/* Field Value */}
+										<select
+											value={field.valueId}
+											onChange={(e) => handleNestedChange(index, fieldIndex, "valueId", e.target.value)}
+											className="w-1/2 bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+										>
+											<option value="">Select Field Value</option>
+											{availableFields
+												.find((fieldData) => fieldData.id === parseInt(field.keyId))
+												?.fieldValues.map((valueData) => (
+													<option key={valueData.id} value={valueData.id}>
+														{valueData.valueName}
+													</option>
+												))}
+										</select>
+									</div>
+								))}
+
+								<button
+									type="button"
+									onClick={() => handleAddField(index)}
+									className="text-blue-500 text-sm"
+								>
+									+ Add Field
+								</button>
+							</div>
 						))}
 
-						<button type="button" onClick={handleAddAttribute} className="text-blue-500 text-sm">+ Add Attribute Group</button>
-
+						{/* Add Attribute */}
+						<button
+							type="button"
+							onClick={handleAddAttribute}
+							className="text-blue-500 text-sm"
+						>
+							+ Add Attribute Group
+						</button>
 
 						<div>
 							<label className="block text-sm font-medium text-gray-200 mb-2">Upload Images</label>

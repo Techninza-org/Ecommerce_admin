@@ -124,18 +124,20 @@ const SIDEBAR_ITEMS = [
 	{ name: "Products", icon: ShoppingBag, color: "#8B5CF6", href: "/products" },
 	// { name: "Post-Products", icon: ShoppingBag, color: "#8B5CF6", href: "/post-products"},
 	// { name: "Post-Simple-Products", icon: ShoppingBag, color: "#8B5CF6", href: "/post-simple-product" },
+	{ name: "Category", icon: DollarSign, color: "#10B981", href: "/category" },
 	{ name: "Users", icon: Users, color: "#EC4899", href: "/users" },
-	// { name: "Category", icon: DollarSign, color: "#10B981", href: "/category" },
+	{ name: "Attribute", icon: Settings, color: "#F59E0B", href: "/attribute_page" },
 	{ name: "Orders", icon: ShoppingCart, color: "#F59E0B", href: "/orders" },
-	// { name: "Banners", icon: Image, color: "#6EE7B7", href: "/banners" },
+	// { name: "Filter", icon: Image, color: "#6EE7B7", href: "/filter" },
 	{
-		name: "Managemant",
+		name: "Home Managemant",
 		icon: Settings,
 		color: "#6EE7B7",
 		subItems: [
 			{ name: "Banner", icon: Image, color: "#6EE7B7", href: "/banners" },
-			{ name: "Category", icon: Image, color: "#6EE7B7", href: "/category" },
-			{ name: "Product Group", icon: Image, color: "#6EE7B7", href: "/productGroupPage" }
+			{ name: "Coupon", icon: Image, color: "#6EE7B7", href: "/coupon" },
+			{ name: "Product Group", icon: Image, color: "#6EE7B7", href: "/productGroupPage" },
+			{ name: "App Data", icon: Image, color: "#6EE7B7", href: "/application_data" }
 		]
 	},
 	// { name: "Analytics", icon: TrendingUp, color: "#3B82F6", href: "/analytics" },

@@ -20,6 +20,9 @@ import PreviewProductGroup from "./pages/ProductGroupDetails";
 import { isAuthenticated } from "./utilities/jwt";
 import { useEffect } from "react";
 import CouponPage from "./pages/CouponPage";
+import ApplicationDataPage from "./pages/ApplicationDataPage";
+import AttributePage from "./pages/AttributePage";
+import FilterPage from "./pages/FilterPage";
 
 function App() {
 	const location = useLocation();
@@ -64,6 +67,9 @@ function App() {
 					<Route path="/productGroupPage" element={ <ProductGroupPage />} />
 					<Route path="/previewProductGroup" element={ <PreviewProductGroup />} />
 					<Route path="/coupon" element={ <CouponPage />} />
+					<Route path="/application_data" element={<ApplicationDataPage />}/>
+					<Route path="/attribute_page" element={<AttributePage/>} />
+					<Route path="/filter" element={<FilterPage/>} />
 				</Routes>
 			</div>
 		</div>

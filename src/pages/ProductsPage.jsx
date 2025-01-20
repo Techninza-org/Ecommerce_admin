@@ -17,7 +17,7 @@ const ProductsPage = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		
+
 		const getProducts = async () => {
 			const response = await axios.get("http://45.198.14.69:3000/api/admin/getAllProducts", {
 				headers: {
@@ -25,7 +25,7 @@ const ProductsPage = () => {
 				}
 			});
 			console.log(response.data.products);
-			
+
 			setProducts(response.data.products);
 		}
 
@@ -33,7 +33,7 @@ const ProductsPage = () => {
 
 		console.log("response1: ", getProducts());
 	}, []);
-	
+
 	return (
 		<div className='flex-1 overflow-auto relative z-10'>
 			<Header title='Products' />
@@ -49,7 +49,11 @@ const ProductsPage = () => {
 					{/* <StatCard name='Total Products' icon={Package} value={products.length} color='#6366F1' /> */}
 					<button onClick={() => navigate("/post-products")} className='bg-blue-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700' style={{ height: "100px" }}> CREATE ATTRIBUTED PRODUCT </button>
 					<button onClick={() => navigate("/post-simple-product")} className='bg-blue-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700' style={{ height: "100px" }}
-					> CREATE SIMPLE PRODUCT </button>
+					> CREATE SIMPLE PRODUCT
+					</button>
+					<button onClick={() => navigate("/filter")} className='bg-blue-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700' style={{ height: "100px" }}
+					> Filter Product
+					</button>
 				</motion.div>
 
 				<ProductsTable data={products} />
