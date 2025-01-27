@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 const ActiveCoupons = () => {
   const [coupons, setCoupons] = useState([]);
@@ -8,16 +7,20 @@ const ActiveCoupons = () => {
   const [error, setError] = useState(null);
 
   // Replace with your actual token
-  const token = Cookies.get("token");
+  
 
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const response = await axios.get("http://45.198.14.69/api/user/getActiveCoupons", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        
+        const response = await axios.get(
+          'http://45.198.14.69/api/admin/getAllCoupons',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const { coupons } = response.data;
         setCoupons(coupons);
       } catch (err) {
@@ -40,7 +43,9 @@ const ActiveCoupons = () => {
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
-      <h3 className="text-xl font-semibold text-gray-900 mb-4">Active Coupons</h3>
+      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+        Active Coupons
+      </h3>
       <div className="overflow-x-auto">
         <table className="table-auto w-full border border-gray-300 rounded-lg bg-white">
           <thead>
@@ -63,8 +68,12 @@ const ActiveCoupons = () => {
                 <td className="px-4 py-2 border">
                   {coupon.isPrecent ? "Percentage" : "Flat"}
                 </td>
-                <td className="px-4 py-2 border">{coupon.couponName || "N/A"}</td>
-                <td className="px-4 py-2 border">{coupon.couponDesc || "N/A"}</td>
+                <td className="px-4 py-2 border">
+                  {coupon.couponName || "N/A"}
+                </td>
+                <td className="px-4 py-2 border">
+                  {coupon.couponDesc || "N/A"}
+                </td>
                 <td className="px-4 py-2 border">
                   {new Date(coupon.expiryDate).toLocaleDateString()}
                 </td>

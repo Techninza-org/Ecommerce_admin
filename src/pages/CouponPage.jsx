@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
 import Header from "../components/common/Header";
-import Cookies from "js-cookie";
+
 import ActiveCoupons from "../components/couponTable";
 
 const CouponPage = () => {
@@ -13,11 +13,11 @@ const CouponPage = () => {
   const [isPercentage, setIsPercentage] = useState(true); // Whether the value is percentage
   const [couponExpiryInDays, setCouponExpiryInDays] = useState(""); // Expiry duration input
 
-  const token = Cookies.get("token");
-
   // Handle coupon submission
   const handleCouponSubmit = async (e) => {
     e.preventDefault();
+
+    const token = localStorage.getItem("token");
 
     try {
       const requestBody = {
@@ -28,7 +28,7 @@ const CouponPage = () => {
         isPercentage,
         couponExpiryInDays: parseInt(couponExpiryInDays, 10), // Convert to number
       };
-
+      
       const response = await axios.post(
         "http://45.198.14.69:3000/api/admin/generateCoupon",
         requestBody,
@@ -43,7 +43,10 @@ const CouponPage = () => {
       alert("Coupon generated successfully!");
       console.log("Response:", response.data);
     } catch (error) {
-      console.error("Error generating coupon:", error.response?.data || error.message);
+      console.error(
+        "Error generating coupon:",
+        error.response?.data || error.message
+      );
       alert("Failed to generate coupon. Please try again.");
     }
   };
@@ -58,10 +61,14 @@ const CouponPage = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <h3 className="text-xl font-semibold text-gray-100 mb-4">Generate New Coupon</h3>
+          <h3 className="text-xl font-semibold text-gray-100 mb-4">
+            Generate New Coupon
+          </h3>
           <form onSubmit={handleCouponSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">Coupon Code</label>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Coupon Code
+              </label>
               <input
                 type="text"
                 value={couponCode}
@@ -72,7 +79,9 @@ const CouponPage = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">Coupon Name</label>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Coupon Name
+              </label>
               <input
                 type="text"
                 value={name}
@@ -83,7 +92,9 @@ const CouponPage = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">Description</label>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Description
+              </label>
               <textarea
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
@@ -93,7 +104,9 @@ const CouponPage = () => {
               ></textarea>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">Coupon Value</label>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Coupon Value
+              </label>
               <input
                 type="number"
                 value={couponValue}
@@ -104,10 +117,14 @@ const CouponPage = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">Type</label>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Type
+              </label>
               <select
                 value={isPercentage ? "percentage" : "flat"}
-                onChange={(e) => setIsPercentage(e.target.value === "percentage")}
+                onChange={(e) =>
+                  setIsPercentage(e.target.value === "percentage")
+                }
                 required
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
@@ -116,7 +133,9 @@ const CouponPage = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">Expiry (in days)</label>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Expiry (in days)
+              </label>
               <input
                 type="number"
                 value={couponExpiryInDays}

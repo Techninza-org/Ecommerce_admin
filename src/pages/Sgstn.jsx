@@ -4,7 +4,7 @@ import axios from "axios";
 import Header from "../components/common/Header";
 import Cookies from "js-cookie";
 
-const Category = () => {
+const Sgstn = () => {
   const [categoryName, setCategoryName] = useState("");
   const [categories, setCategories] = useState([]);
   const [parentId, setParentId] = useState("");
@@ -18,6 +18,7 @@ const Category = () => {
     const fetchCategories = async () => {
       try {
         const token = localStorage.getItem("token");
+        console.log("Token: ", token);
 
         if (!token) {
           throw new Error("No API token found in local storage.");
@@ -47,11 +48,6 @@ const Category = () => {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        throw new Error("No API token found in local storage.");
-      }
       const formData = new FormData();
       formData.append("categoryName", categoryName);
 
@@ -104,11 +100,6 @@ const Category = () => {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        throw new Error("No API token found in local storage.");
-      }
       const response = await axios.delete(
         "http://45.198.14.69:3000/api/admin/deleteCategoryById",
         {
@@ -164,13 +155,37 @@ const Category = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <h3 className="text-xl font-semibold text-gray-100 mb-4">
-            {parentId ? "Add New Child Category" : "Add New Parent Category"}
-          </h3>
+          <h3 className="text-xl font-semibold text-gray-100 mb-4">SGSTN</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-200 mb-2">
-                Category Name
+                Company Name
+              </label>
+              <input
+                type="text"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                required
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter category name"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Address
+              </label>
+              <input
+                type="text"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                required
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter category name"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                City
               </label>
               <input
                 type="text"
@@ -183,6 +198,46 @@ const Category = () => {
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                State
+              </label>
+              <input
+                type="text"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                required
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter category name"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Country
+              </label>
+              <input
+                type="text"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                required
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter category name"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Pincode
+              </label>
+              <input
+                type="text"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                required
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter category name"
+              />
+            </div>
+
+            {/* <div>
               <label className="block text-sm font-medium text-gray-200 mb-2">
                 Select Parent Category (Optional)
               </label>
@@ -197,20 +252,20 @@ const Category = () => {
                     <option key={category.id} value={category.id}>
                       {category.parentId === null ? "• " : ""}{" "}
                       {/* Bullet for parent categories */}
-                      {category.categoryName}
-                    </option>
-                    {renderCategoryName(category, " > ")}{" "}
-                    {/* Render child categories with hierarchy */}
-                  </>
-                ))}
+            {/* {category.categoryName}
+                    </option> */}
+            {/* {renderCategoryName(category, " > ")}{" "} */}
+            {/* Render child categories with hierarchy */}
+            {/* </> */}
+            {/* ))}
               </select>
-            </div>
+            </div> */}
 
             {!parentId && (
               <>
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Upload Category Icon
+                    Company Logo
                   </label>
                   <input
                     type="file"
@@ -222,7 +277,7 @@ const Category = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Upload Category Image
+                    Owner Signature
                   </label>
                   <input
                     type="file"
@@ -296,4 +351,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default Sgstn;

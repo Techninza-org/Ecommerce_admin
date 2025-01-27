@@ -23,59 +23,89 @@ import CouponPage from "./pages/CouponPage";
 import ApplicationDataPage from "./pages/ApplicationDataPage";
 import AttributePage from "./pages/AttributePage";
 import FilterPage from "./pages/FilterPage";
-import LegalData from "./pages/LegalData";
+import Settingb from "./pages/Settingb";
+import Sgstn from "./pages/Sgstn";
+import TermandCondition from "./pages/TermandCondition";
+import StatckPage from "./pages/StatckPage";
+import Privacy from "./pages/Privacy";
+import Refundpolicy from "./pages/Refundpolicy";
+import Contactus from "./pages/Contactus";
 
 function App() {
-	const location = useLocation();
-	const isLoginPage = location.pathname === '/login';
-	const navigate = useNavigate();
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/login";
+  const navigate = useNavigate();
 
-	useEffect(() => {
-		if (!isAuthenticated()) {navigate("/login");}
-	}, []);
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/login");
+    }
+  }, []);
 
-	return (
-		<div className={`flex h-screen ${isLoginPage ? 'bg-gray-100' : 'bg-gray-900 text-gray-100 overflow-hidden'}`}>
-			{/* Background effect */}
-			{!isLoginPage && (
-				<>
-					<div className="fixed inset-0 z-0">
-						<div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80" />
-						{/* <div className="absolute inset-1 backdrop-blur-sm" /> */}
-					</div>
-				</>
-			)}
+  return (
+    <div
+      className={`flex h-screen ${
+        isLoginPage
+          ? "bg-gray-100"
+          : "bg-gray-900 text-gray-100 overflow-hidden"
+      }`}
+    >
+      {/* Background effect */}
+      {!isLoginPage && (
+        <>
+          <div className="fixed inset-0 z-0">
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80" />
+            {/* <div className="absolute inset-1 backdrop-blur-sm" /> */}
+          </div>
+        </>
+      )}
 
-			{/* Sidebar */}
-			{!isLoginPage && <Sidebar />}
+      {/* Sidebar */}
+      {!isLoginPage && <Sidebar />}
 
-			{/* Page content */}
-			<div className={`flex-1 ${isLoginPage ? 'flex items-center justify-center' : 'overflow-auto'}`}>
-				<Routes>
-					<Route path="/" element={<OverviewPage />} />
-					<Route path="/products" element={<ProductsPage />} />
-					<Route path="/post-products" element={<PostProduct />} />
-					<Route path="/post-simple-product" element={<CreateSimpleProduct />} />
-					<Route path="/users" element={<UsersPage />} />
-					<Route path="/category" element={<Category />} />
-					<Route path="/orders" element={<OrdersPage />} />
-					<Route path="/banners" element={<BannerPage />} />
-					<Route path="/analytics" element={<AnalyticsPage />} />
-					<Route path="/settings" element={<SettingsPage />} />
-					<Route path="/login" element={<Login />} />
-					<Route path="/order-details" element={<OrderPage />} />
-					<Route path="/preview-banner" element={<BannerPreview />} />
-					<Route path="/productGroupPage" element={ <ProductGroupPage />} />
-					<Route path="/previewProductGroup" element={ <PreviewProductGroup />} />
-					<Route path="/coupon" element={ <CouponPage />} />
-					<Route path="/application_data" element={<ApplicationDataPage />}/>
-					<Route path="/attribute_page" element={<AttributePage/>} />
-					<Route path="/filter" element={<FilterPage/>} />
-					<Route path="/legal_data" element={<LegalData/>} />
-				</Routes>
-			</div>
-		</div>
-	);
+      {/* Page content */}
+      <div
+        className={`flex-1 ${
+          isLoginPage ? "flex items-center justify-center" : "overflow-auto"
+        }`}
+      >
+        <Routes>
+          <Route path="/" element={<OverviewPage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/post-products" element={<PostProduct />} />
+          <Route
+            path="/post-simple-product"
+            element={<CreateSimpleProduct />}
+          />
+          <Route path="/users" element={<UsersPage />} />
+          <Route path="/category" element={<Category />} />
+          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/banners" element={<BannerPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/order-details/:id" element={<OrderPage />} />
+          <Route path="/preview-banner" element={<BannerPreview />} />
+          <Route path="/productGroupPage" element={<ProductGroupPage />} />
+          <Route
+            path="/previewProductGroup"
+            element={<PreviewProductGroup />}
+          />
+          <Route path="/coupon" element={<CouponPage />} />
+          <Route path="/application_data" element={<ApplicationDataPage />} />
+          <Route path="/attribute_page" element={<AttributePage />} />
+          <Route path="/filter" element={<FilterPage />} />
+          <Route path="/settingb" element={<Settingb />} />
+          <Route path="/sgstn" element={<Sgstn />} />
+          <Route path="/term" element={<TermandCondition />} />
+          <Route path="/StatckPage" element={<StatckPage />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/refund" element={<Refundpolicy />} />
+          <Route path="/contact" element={<Contactus />} />
+        </Routes>
+      </div>
+    </div>
+  );
 }
 
 export default App;

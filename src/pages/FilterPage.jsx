@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
@@ -19,27 +19,49 @@ const FilterForm = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://45.198.14.69:3000/api/seller/getAllCategories", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          throw new Error("No API token found in local storage.");
+        }
+        const response = await axios.get(
+          "http://45.198.14.69:3000/api/seller/getAllCategories",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setCategories(response.data.categories);
       } catch (error) {
-        console.error("Error fetching categories:", error.response?.data || error.message);
+        console.error(
+          "Error fetching categories:",
+          error.response?.data || error.message
+        );
       }
     };
 
     const fetchFields = async () => {
       try {
-        const response = await axios.get("http://45.198.14.69/api/admin/getFields", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          throw new Error("No API token found in local storage.");
+        }
+        const response = await axios.get(
+          "http://45.198.14.69/api/admin/getFields",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setFields(response.data.fields);
       } catch (error) {
-        console.error("Error fetching fields:", error.response?.data || error.message);
+        console.error(
+          "Error fetching fields:",
+          error.response?.data || error.message
+        );
       }
     };
 
@@ -61,17 +83,29 @@ const FilterForm = () => {
     };
 
     try {
-      const response = await axios.post("http://45.198.14.69/api/admin/createFilter", payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No API token found in local storage.");
+      }
+      const response = await axios.post(
+        "http://45.198.14.69/api/admin/createFilter",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       alert("Filter created successfully!");
       console.log("Response:", response.data);
     } catch (error) {
-      console.error("Error creating filter:", error.response?.data || error.message);
+      console.error(
+        "Error creating filter:",
+        error.response?.data || error.message
+      );
       alert("Failed to create filter. Please try again.");
     }
   };
@@ -84,10 +118,14 @@ const FilterForm = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
       >
-        <h3 className="text-xl font-semibold text-gray-100 mb-4">Create Filter</h3>
+        <h3 className="text-xl font-semibold text-gray-100 mb-4">
+          Create Filter
+        </h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-2">Filter Name</label>
+            <label className="block text-sm font-medium text-gray-200 mb-2">
+              Filter Name
+            </label>
             <input
               type="text"
               value={filterName}
@@ -116,12 +154,16 @@ const FilterForm = () => {
           </div> */}
 
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-2">Select Field Keys</label>
+            <label className="block text-sm font-medium text-gray-200 mb-2">
+              Select Field Keys
+            </label>
             <select
               multiple
               value={selectedFieldKeys}
               onChange={(e) =>
-                setSelectedFieldKeys(Array.from(e.target.selectedOptions, (option) => option.value))
+                setSelectedFieldKeys(
+                  Array.from(e.target.selectedOptions, (option) => option.value)
+                )
               }
               className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
@@ -134,7 +176,9 @@ const FilterForm = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-2">Min Price</label>
+            <label className="block text-sm font-medium text-gray-200 mb-2">
+              Min Price
+            </label>
             <input
               type="number"
               value={minPrice}
@@ -146,7 +190,9 @@ const FilterForm = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-2">Max Price</label>
+            <label className="block text-sm font-medium text-gray-200 mb-2">
+              Max Price
+            </label>
             <input
               type="number"
               value={maxPrice}
@@ -164,7 +210,9 @@ const FilterForm = () => {
               onChange={(e) => setIsRating(e.target.checked)}
               className="w-4 h-4 text-blue-500 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
             />
-            <label className="text-sm font-medium text-gray-200">Include Rating</label>
+            <label className="text-sm font-medium text-gray-200">
+              Include Rating
+            </label>
           </div>
 
           <div>

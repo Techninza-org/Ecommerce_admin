@@ -7,41 +7,18 @@ const ApplicationDataPage = () => {
   const [razorpayKeySecret, setRazorpayKeySecret] = useState("");
   const [currency, setCurrency] = useState("INR");
   const [applicationName, setApplicationName] = useState("");
-  const token = Cookies.get("token");
-
-  // const handleSetApplicationData = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append("razorpayKeyId", razorpayKeyId);
-  //     formData.append("razorpayKeySecret", razorpayKeySecret);
-  //     formData.append("currency", currency);
-  //     formData.append("applicationName", applicationName);
-
-  //     const response = await axios.post(
-  //       "http://45.198.14.69/api/admin/setApplicationData",
-  //       formData,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     alert("Application data set successfully!");
-  //     console.log("Response:", response.data);
-  //   } catch (error) {
-  //     console.error("Error setting application data:", error.response?.data || error.message);
-  //     alert("Failed to set application data. Please try again.");
-  //   }
-  // };
 
   const handleSetApplicationData = async (e) => {
     e.preventDefault();
 
     try {
+      // Retrieve the token from local storage
+      const token = localStorage.getItem("token");
+      console.log("Token: ", token);
+
+      if (!token) {
+        throw new Error("No API token found in local storage.");
+      }
       const requestData = {
         razorpayKeyId,
         razorpayKeySecret,
@@ -63,18 +40,24 @@ const ApplicationDataPage = () => {
       alert("Application data set successfully!");
       console.log("Response:", response.data);
     } catch (error) {
-      console.error("Error setting application data:", error.response?.data || error.message);
+      console.error(
+        "Error setting application data:",
+        error.response?.data || error.message
+      );
       alert("Failed to set application data. Please try again.");
     }
   };
 
-
   return (
     <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mt-8 m-10">
-      <h3 className="text-xl font-semibold text-gray-100 mb-4">Set Application Data</h3>
+      <h3 className="text-xl font-semibold text-gray-100 mb-4">
+        Set Application Data
+      </h3>
       <form onSubmit={handleSetApplicationData} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Razorpay Key ID</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">
+            Razorpay Key ID
+          </label>
           <input
             type="text"
             value={razorpayKeyId}
@@ -85,7 +68,9 @@ const ApplicationDataPage = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Razorpay Key Secret</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">
+            Razorpay Key Secret
+          </label>
           <input
             type="text"
             value={razorpayKeySecret}
@@ -96,7 +81,9 @@ const ApplicationDataPage = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Currency</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">
+            Currency
+          </label>
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
@@ -109,7 +96,9 @@ const ApplicationDataPage = () => {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Application Name</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">
+            Application Name
+          </label>
           <input
             type="text"
             value={applicationName}

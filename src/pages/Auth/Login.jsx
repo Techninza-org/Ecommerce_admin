@@ -1,36 +1,39 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
-import Cookies from 'js-cookie';
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault(); // Prevents default form submission
-    setError(''); // Reset error
+    setError(""); // Reset error
     setLoading(true); // Show loading state
 
     try {
-      const response = await axios.post('http://45.198.14.69:3000/api/auth/signInAdmin', {
-        email,
-        password,
-      });
-      console.log('Login successful:', response.data);
+      const response = await axios.post(
+        "http://45.198.14.69:3000/api/auth/signInAdmin",
+        {
+          email,
+          password,
+        }
+      );
+      console.log("Login successful:", response.data);
 
-      Cookies.set('token', response.data.token, {expires: 10}); // Save token to cookie
+      localStorage.setItem("token", response.data.token); // Save token to cookie
 
-      if (response.status === 200){
-        navigate('/')
+      if (response.status === 200) {
+        navigate("/");
       }
     } catch (err) {
-      console.error('Login failed:', err.response?.data || err.message);
-      setError(err.response?.data?.message || 'An error occurred. Please try again.');
+      console.error("Login failed:", err.response?.data || err.message);
+      setError(
+        err.response?.data?.message || "An error occurred. Please try again."
+      );
     } finally {
       setLoading(false); // Hide loading state
     }
@@ -38,7 +41,7 @@ export default function Login() {
 
   return (
     <>
-      <div className="min-h-full flex items-center justify-center w-full bg-gray-800 backdrop-blur-md">
+      <div className="min-h-full flex items-center justify-center w-</div>full bg-gray-800 backdrop-blur-md">
         <div className="border-2 rounded-xl shadow-lg max-w-[50vw] min-w-[30vw] px-6 py-12 lg:px-8 bg-white">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <img
@@ -54,7 +57,10 @@ export default function Login() {
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-900">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-900"
+                >
                   Email Address
                 </label>
                 <div className="mt-2">
@@ -71,8 +77,13 @@ export default function Login() {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-900">
-                  Password
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-900"
+                >
+
+                  
+                  Password1
                 </label>
                 <div className="mt-2">
                   <input
@@ -93,15 +104,13 @@ export default function Login() {
                   disabled={loading}
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-indigo-600 disabled:bg-gray-400"
                 >
-                  {loading ? 'Signing In...' : 'Sign In'}
+                  {loading ? "Signing In..." : "Sign In"}
                 </button>
               </div>
             </form>
 
             {error && (
-              <p className="mt-4 text-center text-sm text-red-500">
-                {error}
-              </p>
+              <p className="mt-4 text-center text-sm text-red-500">{error}</p>
             )}
           </div>
         </div>

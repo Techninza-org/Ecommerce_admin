@@ -1,74 +1,180 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom"
-import { motion } from "framer-motion";
-import AddressCard from "../components/address/AddressCard";
-import OrderProductCard from "../components/orders/OrderProductCard";
-import Cookie from "js-cookie";
-import { isAuthenticated } from "../utilities/jwt";
+import google from "/google.png";
+import { useParams } from "react-router-dom";
 
 const OrderPage = () => {
-    const location = useLocation();
-    const { order } = location.state || {};
+  const orderId = useParams().id;
+  const [orderDetails, setOrderDetails] = useState(null);
+  const [companyDetails, setCompanyDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    if (!order) {
-        return (
-            <div>
-                <p>data is empty</p>
-            </div>
-        )
-    }
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-    return (
-        <motion.div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700' initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+        if (!token) {
+          throw new Error("No API token found in local storage.");
+        }
+        const response = await fetch(
+          `http://45.198.14.69/api/admin/getGenerateInvoiceDataByOrderId/${orderId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-            {/* <h2 className='text-xl font-semibold text-gray-100'>Order id: {order.id}</h2>
-            <h2 className='text-xl font-semibold text-gray-100'>Total products: {order.orderProducts.length}</h2>
-            <h2 className='text-xl font-semibold text-gray-100'>Order Type: {order.isCod ? "COD" : "PREPAID"}</h2>
-            <h2 className='text-xl font-semibold text-gray-100'>Total Order Amount: {order.totalAmount}</h2>
-            <h2 className='text-xl font-semibold text-gray-100'>Order date: {new Date(order.createdAt).toLocaleDateString()} {new Date(order.createdAt).toLocaleTimeString()}</h2>
-            <br></br> */}
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-            <motion.div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-6' initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+        const data = await response.json();
+        setOrderDetails(data.orderDetails);
+        setCompanyDetails(data.companyDetails);
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-                <h2 className='text-xl font-semibold text-gray-100 text-center'>Order Details</h2>
-                <br />
-                
-                <div className='flex flex-row justify-evenly items-center mb-6 text-center text-xl font-semibold'>
+    fetchOrders();
+  }, [orderId]);
 
-                    <div>
-                        <p>Order id: </p>
-                        <p>Total products: </p>
-                        <p>Order Type: </p>
-                        <p>Total Order Amount: </p>
-                        <p>Order date: </p>
-                    </div>
+  const calculateTotalAmount = () => {
+    return orderDetails?.orderProducts
+      ?.reduce((total, product) => total + product.amount, 0)
+      .toFixed(2);
+  };
 
-                    <div>
-                        <p>{order.id}</p>
-                        <p>{order.orderProducts.length}</p>
-                        <p>{order.isCod ? "COD" : "PREPAID"}</p>
-                        <p>{order.totalAmount}</p>
-                        <p>{new Date(order.createdAt).toLocaleDateString()} {new Date(order.createdAt).toLocaleTimeString()}</p>
-                    </div>
+  return (
+    <div
+      className="container mt-5 border rounded-3"
+      style={{
+        backgroundColor: "#f8f9fa",
+        margin: "auto",
+        width: "50%",
+        zIndex: 10,
+        position: "relative",
+      }}
+    >
+      {/* Header */}
+      <div
+        className="bg-purple text-white p-4"
+        style={{ backgroundColor: "#6f42c1", zIndex: 10, position: "relative" }}
+      >
+        <table style={{ width: "100%", zIndex: 10 }}>
+          <tbody>
+            <tr>
+              <td>
+                <h1>Invoice</h1>
+                <img
+                  src={google}
+                  alt="Company Logo"
+                  style={{ height: "100px", zIndex: 10 }}
+                />
+              </td>
+              <td style={{ textAlign: "right" }}>
+                <h3>{companyDetails?.companyName || "Your Company"}</h3>
+                <p>
+                  {companyDetails?.addressText}
+                  <br />
+                  {companyDetails?.city}, {companyDetails?.country}
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-                </div>
-            </motion.div>
+      {/* Billing Info */}
+      <div
+        className="p-4 text-black"
+        style={{ zIndex: 10, position: "relative" }}
+      >
+        <table className="table" style={{ width: "100%", zIndex: 10 }}>
+          <tbody>
+            <tr style={{ zIndex: 10, position: "relative" }}>
+              <td style={{ zIndex: 10, position: "relative" }}>
+                <h5>BILL TO:</h5>
+                <p>
+                  {orderDetails?.orderAddress?.addressText}
+                  <br />
+                  {orderDetails?.orderAddress?.city}, <br />
+                  {orderDetails?.orderAddress?.state}
+                  <br />
+                  {orderDetails?.orderAddress?.country}, <br />
+                  {orderDetails?.orderAddress?.pincode}
+                </p>
+              </td>
+              <td
+                style={{
+                  textAlign: "right",
+                  zIndex: 10,
+                  position: "relative",
+                }}
+              >
+                <p>
+                  <strong>INVOICE</strong>
+                  <br /> {orderDetails?.id}
+                  <br />
+                  <strong>DATE</strong>
+                  <br />{" "}
+                  {new Date(orderDetails?.createdAt).toLocaleDateString()}
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-            <div>
+      {/* Items Table */}
 
-                <AddressCard address={order.orderAddress} />
+      {/* Notes and Total */}
+      <div
+        className="p-4 text-black"
+        style={{ zIndex: 10, position: "relative" }}
+      >
+        <table
+          className="table"
+          style={{ backgroundColor: "#f8f9fa", width: "100%" }}
+        >
+          <tbody style={{ zIndex: 10 }}>
+            <tr>
+              <td>
+                <h5>NOTES:</h5>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              </td>
+              <td style={{ textAlign: "right", width: "50%" }}>
+                <h1>Total Amount</h1>
+                <h1>${calculateTotalAmount()}</h1>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-                {order.orderProducts.map((orderProduct) => {
-                    console.log(orderProduct, "order product details in map");
-                    return (
-                        <div style={{ marginTop: '20px' }}>
-                            <OrderProductCard currentOrderProduct={orderProduct} />
-                        </div>
-                    );
-                })}
-            </div>
-        </motion.div>
-    )
-}
+      {/* Footer */}
+      <div
+        className="bg-dark text-center p-3 text-"
+        style={{ zIndex: 10, position: "relative" }}
+      >
+        <p>Powered by Wave</p>
+        <p>
+          This invoice was generated with the help of Wave Financial Inc. Visit{" "}
+          <a href="https://waveapps.com" className="text-white">
+            waveapps.com
+          </a>{" "}
+          for more details.
+        </p>
+      </div>
+    </div>
+  );
+};
 
 export default OrderPage;

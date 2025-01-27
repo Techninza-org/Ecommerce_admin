@@ -15,7 +15,7 @@ const AttributePage = () => {
         key,
         value: values,
       };
-
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         "http://45.198.14.69/api/admin/createFieldWithValue",
         requestData,
@@ -30,7 +30,10 @@ const AttributePage = () => {
       alert("Data submitted successfully!");
       console.log("Response:", response.data);
     } catch (error) {
-      console.error("Error submitting data:", error.response?.data || error.message);
+      console.error(
+        "Error submitting data:",
+        error.response?.data || error.message
+      );
       alert("Failed to submit data. Please try again.");
     }
   };
@@ -52,10 +55,14 @@ const AttributePage = () => {
 
   return (
     <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mt-8 m-10">
-      <h3 className="text-xl font-semibold text-gray-100 mb-4">Set Key-Value Data</h3>
+      <h3 className="text-xl font-semibold text-gray-100 mb-4">
+        Set Key-Value Data
+      </h3>
       <form onSubmit={handleSetKeyValueData} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Key</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">
+            Key
+          </label>
           <input
             type="text"
             value={key}
@@ -66,7 +73,9 @@ const AttributePage = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Values</label>
+          <label className="block text-sm font-medium text-gray-200 mb-2">
+            Values
+          </label>
           {values.map((value, index) => (
             <div key={index} className="flex items-center space-x-2 mb-2">
               <input
