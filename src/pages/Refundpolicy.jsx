@@ -13,25 +13,6 @@ const Refund = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/api/getToken");
-        setToken(response.data.token);
-      } catch (error) {
-        console.error("Error fetching the token:", error);
-      }
-    };
-
-    fetchToken();
-  }, []);
-
-  useEffect(() => {
-    if (!token) {
-      console.error("Token is not set");
-    }
-  }, [token]);
-
   // Handle markdown editor changes
   const handleMarkdownChange = (content) => {
     setFormData((prevData) => ({

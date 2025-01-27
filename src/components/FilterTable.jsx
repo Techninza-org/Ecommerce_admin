@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import axios from "axios";
 
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import APIs from "../utilities/api";
 
@@ -75,18 +74,13 @@ const orderData = [
 ];
 
 const FilterTable = ({ data }) => {
-  console.log("banner table test1: ", data);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredBanner, setFilteredBanner] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     setFilteredBanner(data);
-    console.log("set filter banner: ", data);
   }, [data]);
-
-  console.log("all banners test2: ", filteredBanner);
 
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
@@ -100,22 +94,22 @@ const FilterTable = ({ data }) => {
   };
 
   const handleActiveUnActiveToggle = async (bannerId) => {
-    console.log("inside handleStatusChange");
-
-    const token = Cookies.get("token");
     try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No API token found in local storage.");
+      }
       const response = await axios.put(
         "http://45.198.14.69:3000/api/admin/activeUnActiveBanner",
         { bannerId: bannerId },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${Cookies.get("token")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-
-      console.log("response", response.data);
 
       if (response.status === 200) {
         alert(`message: ${response.data.message}, status: ${response.status}`);
@@ -153,7 +147,7 @@ const FilterTable = ({ data }) => {
       return;
     }
 
-    const token = Cookies.get("token");
+    const token = localStorage.getItem("token");
 
     try {
       const response = await axios.delete(

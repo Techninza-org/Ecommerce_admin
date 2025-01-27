@@ -36,7 +36,7 @@ const Terms = () => {
       const response = await axios.post(
         "http://45.198.14.69/api/admin/setLegalData",
         {
-          refundPolicy: formData.description, // Map to privacyPolicy
+          termsAndConditions: formData.description, // Map to privacyPolicy
         },
         {
           headers: { Authorization: `Bearer ${token}` },

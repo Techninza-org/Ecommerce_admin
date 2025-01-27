@@ -7,13 +7,14 @@ const ActiveCoupons = () => {
   const [error, setError] = useState(null);
 
   // Replace with your actual token
-  const token = localStorage.getItem("token");
+  
 
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
+        
         const response = await axios.get(
-          "http://45.198.14.69/api/user/getActiveCoupons",
+          'http://45.198.14.69/api/admin/getAllCoupons',
           {
             headers: {
               Authorization: `Bearer ${token}`,
