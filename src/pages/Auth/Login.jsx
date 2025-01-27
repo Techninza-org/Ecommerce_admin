@@ -83,7 +83,7 @@ export default function Login() {
                 >
 
                   
-                  Password1
+                  Password
                 </label>
                 <div className="mt-2">
                   <input
