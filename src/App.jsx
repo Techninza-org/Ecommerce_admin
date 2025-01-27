@@ -23,6 +23,7 @@ import CouponPage from "./pages/CouponPage";
 import ApplicationDataPage from "./pages/ApplicationDataPage";
 import AttributePage from "./pages/AttributePage";
 import FilterPage from "./pages/FilterPage";
+import LegalData from "./pages/LegalData";
 
 function App() {
 	const location = useLocation();
@@ -70,6 +71,7 @@ function App() {
 					<Route path="/application_data" element={<ApplicationDataPage />}/>
 					<Route path="/attribute_page" element={<AttributePage/>} />
 					<Route path="/filter" element={<FilterPage/>} />
+					<Route path="/legal_data" element={<LegalData/>} />
 				</Routes>
 			</div>
 		</div>
