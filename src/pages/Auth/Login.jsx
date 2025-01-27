@@ -81,7 +81,9 @@ export default function Login() {
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-900"
                 >
-                  Password
+
+                  
+                  Password1
                 </label>
                 <div className="mt-2">
                   <input
