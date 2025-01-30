@@ -117,6 +117,7 @@ const FilterForm = () => {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
+        style={{ width: "45%", height: "100%" }}
       >
         <h3 className="text-xl font-semibold text-gray-100 mb-4">
           Create Filter
@@ -135,23 +136,6 @@ const FilterForm = () => {
               placeholder="Enter filter name"
             />
           </div>
-
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-200 mb-2">Select Category</label>
-            <select
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-              required
-              className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select a category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.categoryName}
-                </option>
-              ))}
-            </select>
-          </div> */}
 
           <div>
             <label className="block text-sm font-medium text-gray-200 mb-2">
@@ -175,32 +159,36 @@ const FilterForm = () => {
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-200 mb-2">
-              Min Price
-            </label>
-            <input
-              type="number"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              required
-              className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter minimum price"
-            />
-          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
-          <div>
-            <label className="block text-sm font-medium text-gray-200 mb-2">
-              Max Price
-            </label>
-            <input
-              type="number"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              required
-              className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter maximum price"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Min Price
+              </label>
+              <input
+                type="number"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                required
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter minimum price"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Max Price
+              </label>
+              <input
+                type="number"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                required
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter maximum price"
+              />
+            </div>
+
           </div>
 
           <div className="flex items-center space-x-2">

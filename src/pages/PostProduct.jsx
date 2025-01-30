@@ -9,7 +9,7 @@ const PostProductsPage = () => {
     productDescription: "",
     taxPercentage: 0,
     salePricePercent: 0,
-    attributesJson: [{ price: "", mrp: 0, quantity: 0, thresholdQty: 0, fields: [{ name: "", value: "" }] }],
+    attributesJson: [{ price: "", mrp: "", quantity: "", thresholdQty: "", fields: [{ name: "", value: "" }] }],
     categoryIds: [],
     // imagesUrls: ["https://www.google.co.in/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "https://www.google.co.in/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"],
     imagesUrls: [],
@@ -27,14 +27,6 @@ const PostProductsPage = () => {
       setCustomGst("");
     }
   };
-
-  // const [showSellingPrice, setShowSellingPrice] = useState(false);
-  // const [sellingPrice, setSellingPrice] = useState("");
-
-  // const handleSellingPriceToggle = (value) => {
-  //   setShowSellingPrice(value === "yes");
-  //   if (value !== "yes") setSellingPrice(""); // Reset selling price if toggled off
-  // };
 
   const [categories, setCategories] = useState([]);
   const [availableFields, setAvailableFields] = useState([]);
@@ -62,9 +54,6 @@ const PostProductsPage = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        // const tagsResponse = await axios.get("http://45.198.14.69:3000/api/seller/tags", {
-        // 	headers: { Authorization: `Bearer ${token}` },
-        // });
 
         const fieldsResponse = await axios.get(
           "http://45.198.14.69/api/admin/getFields",
@@ -106,12 +95,6 @@ const PostProductsPage = () => {
     setFormData({ ...formData, attributesJson: updatedAttributes });
   };
 
-  // const handlePriceChange = (index, value) => {
-  //   const updatedAttributes = [...formData.attributesJson];
-  //   updatedAttributes[index].price = value;
-  //   setFormData({ ...formData, attributesJson: updatedAttributes });
-  // };
-
   const handleAddField = (index) => {
     const updatedAttributes = [...formData.attributesJson];
     updatedAttributes[index].fields.push({ name: "", value: "" });
@@ -128,23 +111,6 @@ const PostProductsPage = () => {
     });
   };
 
-  // const handleCategorySelect = (categoryId) => {
-  //   setFormData({
-  //     ...formData,
-  //     categoryIds: formData.categoryIds.includes(categoryId)
-  //       ? formData.categoryIds.filter((id) => id !== categoryId)
-  //       : [...formData.categoryIds, categoryId],
-  //   });
-  // };
-
-  // const handleTagSelect = (tag) => {
-  //   setFormData({
-  //     ...formData,
-  //     tags: formData.tags.includes(tag)
-  //       ? formData.tags.filter((t) => t !== tag)
-  //       : [...formData.tags, tag],
-  //   });
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -161,15 +127,23 @@ const PostProductsPage = () => {
       return;
     }
 
+    if (formData.salePricePercent < 0 || formData.salePricePercent > 100) {
+      alert("Sale Price Percent should be between 0 and 100.");
+      return;
+    }
+
+    if (formData.taxPercentage < 0 || formData.taxPercentage > 100) {
+      alert("Tax Percentage should be between 0 and 100.");
+      return;
+    }
+
     if (
       formData.attributesJson.some(
         (attribute) =>
-          attribute.fields.some(
-            (field) => field.name === "" || field.value === ""
-          ) || attribute.price === ""
+          attribute.fields.some((field) => field.name === "" || field.value === "") || attribute.price === "" || attribute.mrp === "" || attribute.quantity === "" || attribute.thresholdQty === "" || attribute.mrp < attribute.price || attribute.thresholdQty > attribute.quantity
       )
     ) {
-      alert("Please fill all attribute fields.");
+      alert("Please fill all attribute fields and ensure MRP is greater than Price and Threshold Qty is less than Available Qty.");
       return;
     }
 
@@ -335,105 +309,6 @@ const PostProductsPage = () => {
 
             </div>
 
-            {/* <div className="flex space-x-4 mb-4">
-              <div className="w-1/2">
-                <label className="block text-sm text-gray-200 mb-2">GST</label>
-                <select
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                  onChange={(e) => {
-                    const selectedGst = e.target.value;
-                    // Update the state or handle the selected GST value
-                  }}
-                >
-                  <option value="">Select GST</option>
-                  {gstOptions.map((gst, index) => (
-                    <option key={index} value={gst}>
-                      {gst}%
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="w-1/2">
-                <label className="block text-sm text-gray-200 mb-2">Add Custom GST</label>
-
-                <div className="flex">
-                  <input
-                    type="text"
-                    value={customGst}
-                    onChange={(e) => setCustomGst(e.target.value)}
-                    placeholder="Enter GST"
-                    className="flex-grow bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddGstOption}
-                    className="ml-2 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition"
-                  >
-                    Add
-                  </button>
-                </div>
-              </div>
-            </div> */}
-
-            {/* price */}
-            {/* <div className="flex space-x-4 mb-2">
-              <label className="w-full block text-sm text-gray-200">
-                <input
-                  type="number"
-                  placeholder="Price"
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                />
-              </label>
-            </div> */}
-
-            {/* selling price */}
-            {/* <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
-                Sale Price Percentage
-              </label>
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center text-gray-200">
-                  <input
-                    type="radio"
-                    name="sellingPriceToggle"
-                    value="yes"
-                    onChange={(e) => handleSellingPriceToggle(e.target.value)}
-                    checked={showSellingPrice}
-                    className="form-radio text-blue-500"
-                  />
-                  <span className="ml-2">On</span>
-                </label>
-                <label className="flex items-center text-gray-200">
-                  <input
-                    type="radio"
-                    name="sellingPriceToggle"
-                    value="no"
-                    onChange={(e) => handleSellingPriceToggle(e.target.value)}
-                    checked={!showSellingPrice}
-                    className="form-radio text-blue-500"
-                  />
-                  <span className="ml-2">Off</span>
-                </label>
-              </div>
-              {showSellingPrice && (
-                <div className="mt-4">
-                  <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Enter Sale Price Percentage
-                  </label>
-                  <input
-                    type="number"
-                    name="sellingPrice"
-                    value={formData.salePricePercent}
-                    // onChange={(e) => setSellingPrice(e.target.value)}
-                    onChange={handleSalePriceChange}
-                    className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Sale Price Percentage"
-                  />
-                </div>
-              )}
-            </div> */}
-
 
             <div className="flex space-x-4 mb-4">
               <div>
@@ -470,7 +345,7 @@ const PostProductsPage = () => {
             {formData.attributesJson.map((attribute, index) => (
               <div key={index}>
                 <h4 className="text-sm text-gray-300 mb-2">
-                  Attributes Group {index + 1}
+                  Varient {index + 1}
                 </h4>
                 <div className="mb-2 flex space-x-4">
 
@@ -523,7 +398,7 @@ const PostProductsPage = () => {
                 </div>
 
                 {attribute.fields.map((field, fieldIndex) => (
-                  <div key={fieldIndex} className="flex space-x-4 mb-2">
+                  <div key={fieldIndex} className="flex space-x-4 mb-2" style={{ width: "30%" }}>
                     {/* Field Key */}
                     <select
                       value={field.name}
@@ -586,7 +461,7 @@ const PostProductsPage = () => {
               onClick={handleAddAttribute}
               className="text-blue-500 text-sm"
             >
-              + Add Attribute Group
+              + Add Varient
             </button>
 
             <div>
@@ -605,9 +480,9 @@ const PostProductsPage = () => {
               <button
                 type="submit"
                 className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                style={{ width: "30%", backgroundColor: "green" }}
               >
-                {" "}
-                Submit{" "}
+                {" "}Create Product{" "}
               </button>
             </div>
           </form>

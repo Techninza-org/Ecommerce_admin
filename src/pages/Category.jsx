@@ -178,6 +178,7 @@ const Category = () => {
                 onChange={(e) => setCategoryName(e.target.value)}
                 required
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{ width: "60%" }}
                 placeholder="Enter category name"
               />
             </div>
@@ -190,6 +191,7 @@ const Category = () => {
                 value={parentId}
                 onChange={(e) => setParentId(e.target.value)}
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{ width: "60%" }}
               >
                 <option value="">None (Will create a parent category)</option>
                 {categories.map((category) => (
@@ -218,6 +220,7 @@ const Category = () => {
                     onChange={(e) => setCategoryIcon(e.target.files[0])}
                     required
                     className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    style={{ width: "60%" }}
                   />
                 </div>
                 <div>
@@ -230,6 +233,7 @@ const Category = () => {
                     onChange={(e) => setCategoryImage(e.target.files[0])}
                     required
                     className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    style={{ width: "60%" }}
                   />
                 </div>
               </>
@@ -239,6 +243,7 @@ const Category = () => {
               <button
                 type="submit"
                 className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                style={{ width: "30%", backgroundColor: "green" }}
               >
                 Submit
               </button>
@@ -266,6 +271,7 @@ const Category = () => {
                 onChange={(e) => setCategoryId(e.target.value)}
                 required
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                style={{ width: "60%" }}
               >
                 <option value="">Select a category</option>
                 {categories.map((category) => (
@@ -285,6 +291,7 @@ const Category = () => {
               <button
                 type="submit"
                 className="w-full bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition focus:outline-none focus:ring-2 focus:ring-red-400"
+                style={{ width: "30%" }}
               >
                 Delete Category
               </button>

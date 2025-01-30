@@ -143,39 +143,44 @@ const BannerPage = () => {
           <h2 className="text-2xl font-semibold">Add Banner</h2>
 
           <form onSubmit={handleSubmit} className="mb-8 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-100">
-                Banner Name
-              </label>
-              <input
-                type="text"
-                name="bannerName"
-                value={formData.bannerName}
-                onChange={handleInputChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-gray-900"
-                required
-              />
+
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-100"> Banner Name </label>
+                <input
+                  type="text"
+                  name="bannerName"
+                  value={formData.bannerName}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-gray-900"
+                  style={{ width: "100%" }}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-100"> Upload Images </label>
+                <input
+                  type="file"
+                  name="images"
+                  onChange={handleFileChange}
+                  className="mt-1 block w-full"
+                  accept="image/*"
+                  multiple // Allow multiple files
+                  required
+                />
+              </div>
+
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-100">
-                Images
-              </label>
-              <input
-                type="file"
-                name="images"
-                onChange={handleFileChange}
-                className="mt-1 block w-full"
-                accept="image/*"
-                multiple // Allow multiple files
-                required
-              />
-            </div>
+
             <button
               type="submit"
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none"
             >
               Submit
             </button>
+
           </form>
         </motion.div>
         {/* <br></br> */}

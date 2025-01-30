@@ -102,7 +102,7 @@ const StackPage = () => {
             <MarkdownEditor
               value={formData.description}
               onChange={handleMarkdownChange}
-              height={400}
+              height={260}
               className="z-10"
             />
           </div>

@@ -28,7 +28,7 @@ const CouponPage = () => {
         isPercentage,
         couponExpiryInDays: parseInt(couponExpiryInDays, 10), // Convert to number
       };
-      
+
       const response = await axios.post(
         "http://45.198.14.69:3000/api/admin/generateCoupon",
         requestBody,
@@ -65,77 +65,78 @@ const CouponPage = () => {
             Generate New Coupon
           </h3>
           <form onSubmit={handleCouponSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
-                Coupon Code
-              </label>
-              <input
-                type="text"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
-                required
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter coupon code"
-              />
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2"> Coupon Code </label>
+                <input
+                  type="text"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  required
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter coupon code"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2"> Coupon Name </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter coupon name"
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
-                Coupon Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter coupon name"
-              />
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2"> Type </label>
+                <select
+                  value={isPercentage ? "percentage" : "flat"}
+                  onChange={(e) =>
+                    setIsPercentage(e.target.value === "percentage")
+                  }
+                  required
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="flat">Flat</option>
+                  <option value="percentage">Percentage</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2"> Coupon Value </label>
+                <input
+                  type="number"
+                  value={couponValue}
+                  onChange={(e) => setCouponValue(e.target.value)}
+                  required
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter coupon value"
+                />
+              </div>
+
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
-                Description
-              </label>
+              <label className="block text-sm font-medium text-gray-200 mb-2"> Description </label>
               <textarea
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
                 required
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter coupon description"
-              ></textarea>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
-                Coupon Value
-              </label>
-              <input
-                type="number"
-                value={couponValue}
-                onChange={(e) => setCouponValue(e.target.value)}
-                required
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter coupon value"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
-                Type
-              </label>
-              <select
-                value={isPercentage ? "percentage" : "flat"}
-                onChange={(e) =>
-                  setIsPercentage(e.target.value === "percentage")
-                }
-                required
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="flat">Flat</option>
-                <option value="percentage">Percentage</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
-                Expiry (in days)
-              </label>
+              <label className="block text-sm font-medium text-gray-200 mb-2">Expiry (in days)</label>
               <input
                 type="number"
                 value={couponExpiryInDays}
@@ -143,8 +144,10 @@ const CouponPage = () => {
                 required
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter expiry in days"
+                style={{ width: "40%" }}
               />
             </div>
+
             <div>
               <button
                 style={{ backgroundColor: "green" }}
