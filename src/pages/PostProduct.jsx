@@ -7,7 +7,9 @@ const PostProductsPage = () => {
   const [formData, setFormData] = useState({
     productName: "",
     productDescription: "",
-    attributesJson: [{ price: "", fields: [{ name: "", value: "" }] }],
+    taxPercentage: 0,
+    salePricePercent: 0,
+    attributesJson: [{ price: "", mrp: 0, quantity: 0, thresholdQty: 0, fields: [{ name: "", value: "" }] }],
     categoryIds: [],
     // imagesUrls: ["https://www.google.co.in/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "https://www.google.co.in/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"],
     imagesUrls: [],
@@ -26,13 +28,13 @@ const PostProductsPage = () => {
     }
   };
 
-  const [showSellingPrice, setShowSellingPrice] = useState(false);
-  const [sellingPrice, setSellingPrice] = useState("");
+  // const [showSellingPrice, setShowSellingPrice] = useState(false);
+  // const [sellingPrice, setSellingPrice] = useState("");
 
-  const handleSellingPriceToggle = (value) => {
-    setShowSellingPrice(value === "yes");
-    if (value !== "yes") setSellingPrice(""); // Reset selling price if toggled off
-  };
+  // const handleSellingPriceToggle = (value) => {
+  //   setShowSellingPrice(value === "yes");
+  //   if (value !== "yes") setSellingPrice(""); // Reset selling price if toggled off
+  // };
 
   const [categories, setCategories] = useState([]);
   const [availableFields, setAvailableFields] = useState([]);
@@ -88,17 +90,27 @@ const PostProductsPage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleSalePriceChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: parseFloat(value) });
+  };
+
+  const handleTaxChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: parseFloat(value) });
+  };
+
   const handleNestedChange = (index, fieldIndex, key, value) => {
     const updatedAttributes = [...formData.attributesJson];
     updatedAttributes[index].fields[fieldIndex][key] = value;
     setFormData({ ...formData, attributesJson: updatedAttributes });
   };
 
-  const handlePriceChange = (index, value) => {
-    const updatedAttributes = [...formData.attributesJson];
-    updatedAttributes[index].price = value;
-    setFormData({ ...formData, attributesJson: updatedAttributes });
-  };
+  // const handlePriceChange = (index, value) => {
+  //   const updatedAttributes = [...formData.attributesJson];
+  //   updatedAttributes[index].price = value;
+  //   setFormData({ ...formData, attributesJson: updatedAttributes });
+  // };
 
   const handleAddField = (index) => {
     const updatedAttributes = [...formData.attributesJson];
@@ -116,23 +128,23 @@ const PostProductsPage = () => {
     });
   };
 
-  const handleCategorySelect = (categoryId) => {
-    setFormData({
-      ...formData,
-      categoryIds: formData.categoryIds.includes(categoryId)
-        ? formData.categoryIds.filter((id) => id !== categoryId)
-        : [...formData.categoryIds, categoryId],
-    });
-  };
+  // const handleCategorySelect = (categoryId) => {
+  //   setFormData({
+  //     ...formData,
+  //     categoryIds: formData.categoryIds.includes(categoryId)
+  //       ? formData.categoryIds.filter((id) => id !== categoryId)
+  //       : [...formData.categoryIds, categoryId],
+  //   });
+  // };
 
-  const handleTagSelect = (tag) => {
-    setFormData({
-      ...formData,
-      tags: formData.tags.includes(tag)
-        ? formData.tags.filter((t) => t !== tag)
-        : [...formData.tags, tag],
-    });
-  };
+  // const handleTagSelect = (tag) => {
+  //   setFormData({
+  //     ...formData,
+  //     tags: formData.tags.includes(tag)
+  //       ? formData.tags.filter((t) => t !== tag)
+  //       : [...formData.tags, tag],
+  //   });
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -163,7 +175,7 @@ const PostProductsPage = () => {
 
     try {
       const response = await axios.post(
-        "http://45.198.14.69:3000/api/seller/createAttributeProduct",
+        "http://45.198.14.69/api/seller/createAttributeProduct",
         formData,
         {
           headers: {
@@ -266,147 +278,64 @@ const PostProductsPage = () => {
               />
             </div>
 
-            {/* <div>
-							<label className="block text-sm font-medium text-gray-200 mb-2">Categories</label>
-							<div className="flex flex-wrap gap-2">
-								{categories.map((category) => (
-									<button
-										type="button"
-										key={category.id}
-										onClick={() => handleCategorySelect(category.id)}
-										className={`px-4 py-2 rounded-lg ${formData.categoryIds.includes(category.id)
-											? "bg-blue-500 text-white"
-											: "bg-gray-700 text-gray-200"
-											}`}
-									>
-										{category.categoryName}
-									</button>
-								))}
-							</div>
-						</div> */}
-
-            <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
-                Categories
-              </label>
-              <select
-                multiple
-                value={formData.categoryIds}
-                onChange={(e) => {
-                  const selectedCategories = Array.from(
-                    e.target.selectedOptions,
-                    (option) => parseInt(option.value, 10)
-                  );
-                  setFormData({ ...formData, categoryIds: selectedCategories });
-                }}
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {categories.map((category) => {
-                  console.log("category Datata12345: ", category);
-                  return (
-                    <option key={category.id} value={category.id}>
-                      {category.categoryName}
-                    </option>
-                  );
-                })}
-              </select>
-              <p className="text-sm text-gray-400 mt-2">
-                Hold Ctrl (Windows) or Command (Mac) to select multiple
-                categories.
-              </p>
-            </div>
-
-            {/* <div>
-							<label className="block text-sm font-medium text-gray-200 mb-2">Tags</label>
-							<div className="flex flex-wrap gap-2">
-								{availableTags.map((tag) => (
-									<button
-										type="button"
-										key={tag}
-										onClick={() => handleTagSelect(tag)}
-										className={`px-4 py-2 rounded-lg ${formData.tags.includes(tag)
-												? "bg-blue-500 text-white"
-												: "bg-gray-700 text-gray-200"
-											}`}
-									>
-										{tag}
-									</button>
-								))}
-							</div>
-						</div> */}
-
-            <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
-                Tags
-              </label>
-              <select
-                multiple
-                value={formData.tags}
-                onChange={(e) => {
-                  const selectedTags = Array.from(
-                    e.target.selectedOptions,
-                    (option) => option.value
-                  );
-                  setFormData({ ...formData, tags: selectedTags });
-                }}
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {availableTags.map((tag) => (
-                  <option key={tag} value={tag}>
-                    {tag}
-                  </option>
-                ))}
-              </select>
-              <p className="text-sm text-gray-400 mt-2">
-                Hold Ctrl (Windows) or Command (Mac) to select multiple tags.
-              </p>
-            </div>
-
-            {/* {formData.attributesJson.map((attribute, index) => (
-							<div key={index}>
-								<h4 className="text-sm text-gray-300 mb-2">Attributes Group {index + 1}</h4>
-								<div className="mb-2">
-									<label className="block text-sm text-gray-200">Price</label>
-									<input
-										type="number"
-										placeholder="Price"
-										value={attribute.price}
-										onChange={(e) => {
-											const updatedAttributes = [...formData.attributesJson];
-											updatedAttributes[index].price = parseFloat(e.target.value);
-											setFormData({ ...formData, attributesJson: updatedAttributes });
-										}}
-										className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-									/>
-								</div>
-								
-								{attribute.fields.map((field, fieldIndex) => (
-									<div key={fieldIndex} className="flex space-x-4 mb-2">
-										<input
-											type="text"
-											placeholder="Field Key"
-											value={field.name}
-											onChange={(e) => handleNestedChange(index, fieldIndex, "name", e.target.value)}
-											className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-										/>
-										<input
-											type="text"
-											placeholder="Field Value"
-											value={field.value}
-											onChange={(e) => handleNestedChange(index, fieldIndex, "value", e.target.value)}
-											className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-										/>
-									</div>
-								))}
-
-								<button type="button" onClick={() => handleAddField(index)} className="text-blue-500 text-sm">+ Add Field</button>
-
-							</div>
-						))} */}
-
-            {/* <button type="button" onClick={handleAddAttribute} className="text-blue-500 text-sm">+ Add Attribute Group</button> */}
-
             <div className="flex space-x-4 mb-4">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2">Categories</label>
+                <select
+                  multiple
+                  value={formData.categoryIds}
+                  onChange={(e) => {
+                    const selectedCategories = Array.from(
+                      e.target.selectedOptions,
+                      (option) => parseInt(option.value, 10)
+                    );
+                    setFormData({ ...formData, categoryIds: selectedCategories });
+                  }}
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {categories.map((category) => {
+                    console.log("category Datata12345: ", category);
+                    return (
+                      <option key={category.id} value={category.id}>
+                        {category.categoryName}
+                      </option>
+                    );
+                  })}
+                </select>
+
+                <p className="text-sm text-gray-400 mt-2"> Hold Ctrl (Windows) or Command (Mac) to select multiple categories.</p>
+
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2">Tags</label>
+                <select
+                  multiple
+                  value={formData.tags}
+                  onChange={(e) => {
+                    const selectedTags = Array.from(
+                      e.target.selectedOptions,
+                      (option) => option.value
+                    );
+                    setFormData({ ...formData, tags: selectedTags });
+                  }}
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {availableTags.map((tag) => (
+                    <option key={tag} value={tag}>
+                      {tag}
+                    </option>
+                  ))}
+                </select>
+
+                <p className="text-sm text-gray-400 mt-2">Hold Ctrl (Windows) or Command (Mac) to select multiple tags.</p>
+
+              </div>
+
+            </div>
+
+            {/* <div className="flex space-x-4 mb-4">
               <div className="w-1/2">
                 <label className="block text-sm text-gray-200 mb-2">GST</label>
                 <select
@@ -426,9 +355,8 @@ const PostProductsPage = () => {
               </div>
 
               <div className="w-1/2">
-                <label className="block text-sm text-gray-200 mb-2">
-                  Add Custom GST
-                </label>
+                <label className="block text-sm text-gray-200 mb-2">Add Custom GST</label>
+
                 <div className="flex">
                   <input
                     type="text"
@@ -446,10 +374,10 @@ const PostProductsPage = () => {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* price */}
-            <div className="flex space-x-4 mb-2">
+            {/* <div className="flex space-x-4 mb-2">
               <label className="w-full block text-sm text-gray-200">
                 <input
                   type="number"
@@ -457,12 +385,12 @@ const PostProductsPage = () => {
                   className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
                 />
               </label>
-            </div>
+            </div> */}
 
             {/* selling price */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-200 mb-2">
-                Selling Price
+                Sale Price Percentage
               </label>
               <div className="flex items-center space-x-4">
                 <label className="flex items-center text-gray-200">
@@ -491,21 +419,51 @@ const PostProductsPage = () => {
               {showSellingPrice && (
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Enter Selling Price
+                    Enter Sale Price Percentage
                   </label>
                   <input
                     type="number"
                     name="sellingPrice"
-                    value={sellingPrice}
-                    onChange={(e) => setSellingPrice(e.target.value)}
+                    value={formData.salePricePercent}
+                    // onChange={(e) => setSellingPrice(e.target.value)}
+                    onChange={handleSalePriceChange}
                     className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter selling price"
+                    placeholder="Sale Price Percentage"
                   />
                 </div>
               )}
-            </div>
+            </div> */}
 
-            {/* gst option */}
+
+            <div className="flex space-x-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2">
+                  Sale Price Percent
+                </label>
+                <input
+                  type="number"
+                  name="salePricePercent"
+                  value={formData.salePricePercent}
+                  onChange={handleSalePriceChange}
+                  required
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter product name"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2"> Tax Percent </label>
+                <input
+                  type="number"
+                  name="taxPercentage"
+                  value={formData.taxPercentage}
+                  onChange={handleTaxChange}
+                  required
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter product name"
+                />
+              </div>
+            </div>
 
             {/* Attributes */}
 
@@ -514,24 +472,54 @@ const PostProductsPage = () => {
                 <h4 className="text-sm text-gray-300 mb-2">
                   Attributes Group {index + 1}
                 </h4>
-                <div className="mb-2">
-                  <label className="block text-sm text-gray-200">Price</label>
-                  <input
-                    type="number"
-                    placeholder="Price"
-                    value={attribute.price}
-                    onChange={(e) => {
+                <div className="mb-2 flex space-x-4">
+
+                  <div>
+                    <label className="block text-sm text-gray-200">Price</label>
+                    <input
+                      type="number"
+                      placeholder="Price"
+                      value={attribute.price}
+                      onChange={(e) => {
+                        const updatedAttributes = [...formData.attributesJson];
+                        updatedAttributes[index].price = parseFloat(
+                          e.target.value
+                        );
+                        setFormData({
+                          ...formData,
+                          attributesJson: updatedAttributes,
+                        });
+                      }}
+                      className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-200">Mrp</label>
+                    <input type="number" placeholder="MRP" value={attribute.mrp} onChange={(e) => {
                       const updatedAttributes = [...formData.attributesJson];
-                      updatedAttributes[index].price = parseFloat(
-                        e.target.value
-                      );
-                      setFormData({
-                        ...formData,
-                        attributesJson: updatedAttributes,
-                      });
-                    }}
-                    className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                  />
+                      updatedAttributes[index].mrp = parseFloat(e.target.value);
+                      setFormData({ ...formData, attributesJson: updatedAttributes });
+                    }} className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 p-2" />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-200">Threshold Qty</label>
+                    <input type="number" placeholder="threshold qty" value={attribute.thresholdQty} onChange={(e) => {
+                      const updatedAttributes = [...formData.attributesJson];
+                      updatedAttributes[index].thresholdQty = parseFloat(e.target.value);
+                      setFormData({ ...formData, attributesJson: updatedAttributes });
+                    }} className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 p-2" />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-200">Available Qty</label>
+                    <input type="number" placeholder="threshold qty" value={attribute.quantity} onChange={(e) => {
+                      const updatedAttributes = [...formData.attributesJson];
+                      updatedAttributes[index].quantity = parseFloat(e.target.value);
+                      setFormData({ ...formData, attributesJson: updatedAttributes });
+                    }} className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 p-2" />
+                  </div>
                 </div>
 
                 {attribute.fields.map((field, fieldIndex) => (
