@@ -2,6 +2,7 @@ import { color, motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../components/common/Header";
+import { useParams } from "react-router-dom";
 
 import google from "/google.png";
 
@@ -15,28 +16,54 @@ const Settingb = () => {
   const [categoryImage, setCategoryImage] = useState(null);
   const token = localStorage.getItem("token");
 
+  const orderId = useParams().id;
+  const [orderDetails, setOrderDetails] = useState(null);
+  const [companyDetails, setCompanyDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchOrders = async () => {
       try {
-        const response = await axios.get(
-          "http://45.198.14.69:3000/api/seller/getAllCategories",
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          throw new Error("No API token found in local storage.");
+        }
+        const response = await fetch(
+          `http://45.198.14.69/api/admin/getGenerateInvoiceDataByOrderId/${orderId}`,
           {
+            method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
             },
           }
         );
-        setCategories(response.data.categories);
-      } catch (error) {
-        console.error(
-          "Error fetching categories:",
-          error.response?.data || error.message
-        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setOrderDetails(data.orderDetails);
+        setCompanyDetails(data.companyDetails);
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchCategories();
-  }, [token]);
+    fetchOrders();
+  }, [orderId]);
+
+  const calculateTotalAmount = () => {
+    return orderDetails?.orderProducts
+      ?.reduce((total, product) => total + product.amount, 0)
+      .toFixed(2);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,14 +96,6 @@ const Settingb = () => {
         headers["Content-Type"] = "multipart/form-data";
       } else {
         headers["Content-Type"] = "application/json";
-      }
-
-      const response = await axios.post(url, data, { headers });
-      alert(`${parentId ? "Child" : "Parent"} category created successfully!`);
-      console.log("Response:", response.data);
-
-      if (!parentId) {
-        setCategories((prev) => [...prev, response.data]);
       }
     } catch (error) {
       console.error(
@@ -111,7 +130,6 @@ const Settingb = () => {
                       </label>
                       <input
                         type="text"
-                        value={categoryName}
                         onChange={(e) => setCategoryName(e.target.value)}
                         required
                         className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -124,7 +142,6 @@ const Settingb = () => {
                       </label>
                       <input
                         type="text"
-                        value={categoryName}
                         onChange={(e) => setCategoryName(e.target.value)}
                         required
                         className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -138,47 +155,19 @@ const Settingb = () => {
                       </label>
                       <input
                         type="text"
-                        value={categoryName}
                         onChange={(e) => setCategoryName(e.target.value)}
                         required
                         className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter category name"
                       />
                     </div>
-                    <div></div>
-                    {/* <div>
-                      <label className="block text-sm font-medium text-gray-200 mb-2">
-                        State
-                      </label>
-                      <input
-                        type="text"
-                        value={categoryName}
-                        onChange={(e) => setCategoryName(e.target.value)}
-                        required
-                        className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter category name"
-                      />
-                    </div> */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-200 mb-2">
-                        City
-                      </label>
-                      <input
-                        type="text"
-                        value={categoryName}
-                        onChange={(e) => setCategoryName(e.target.value)}
-                        required
-                        className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter category name"
-                      />
-                    </div>
+
                     <div>
                       <label className="block text-sm font-medium text-gray-200 mb-2">
                         Pincode
                       </label>
                       <input
-                        type="text"
-                        value={categoryName}
+                        type="pincode"
                         onChange={(e) => setCategoryName(e.target.value)}
                         required
                         className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -341,24 +330,18 @@ const Settingb = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {Array(6)
-                              .fill(null)
-                              .map((_, index) => (
+                            {orderDetails?.orderProducts?.map(
+                              (product, index) => (
                                 <tr key={index}>
-                                  <td>Item 1</td>
-                                  <td>
-                                    {index === 0 ? (
-                                      <b>Description</b>
-                                    ) : (
-                                      "Description"
-                                    )}
-                                  </td>
-                                  <td className="text-center">1</td>
-                                  <td className="text-center">$0</td>
-                                  <td className="text-center">0%</td>
-                                  <td className="text-center">$000.00</td>
+                                  <td>{product.productId}</td>
+                                  <td>{product.description}</td>
+                                  <td>{product.quantity}</td>
+                                  <td>{product.amount}</td>
+                                  <td>{product.couponAmount}</td>
+                                  <td>{product.amount.toFixed(2)}</td>
                                 </tr>
-                              ))}
+                              )
+                            )}
                           </tbody>
                         </table>
                         {/* Notes and Total */}
@@ -378,7 +361,8 @@ const Settingb = () => {
                                 <td
                                   style={{ textAlign: "right", width: "50%" }}
                                 >
-                                  <h5 className="m-0">Total: $00000.00</h5>
+                                  <h1>Total Amount</h1>
+                                  <h1>{calculateTotalAmount()}</h1>
                                 </td>
                               </tr>
                             </tbody>

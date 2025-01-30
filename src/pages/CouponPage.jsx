@@ -28,7 +28,7 @@ const CouponPage = () => {
         isPercentage,
         couponExpiryInDays: parseInt(couponExpiryInDays, 10), // Convert to number
       };
-      
+
       const response = await axios.post(
         "http://45.198.14.69:3000/api/admin/generateCoupon",
         requestBody,

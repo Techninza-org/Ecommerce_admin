@@ -135,6 +135,37 @@ const OrderPage = () => {
 
       {/* Items Table */}
 
+      <table
+        className="table border-2 text-center text-black"
+        style={{
+          zIndex: 10,
+          width: "100%",
+          position: "relative",
+        }}
+      >
+        <thead>
+          <tr className="text-center ">
+            <th>Items</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Tax</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {orderDetails?.orderProducts?.map((product, index) => (
+            <tr key={index}>
+              <td>{product.productId}</td>
+              <td>{product.description}</td>
+              <td>{product.quantity}</td>
+              <td>{product.amount}</td>
+              <td>{product.couponAmount}</td>
+              <td>{product.amount.toFixed(2)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       {/* Notes and Total */}
       <div
         className="p-4 text-black"
@@ -147,12 +178,46 @@ const OrderPage = () => {
           <tbody style={{ zIndex: 10 }}>
             <tr>
               <td>
-                <h5>NOTES:</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                {/* <h5>NOTES:</h5>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> */}
               </td>
               <td style={{ textAlign: "right", width: "50%" }}>
                 <h1>Total Amount</h1>
-                <h1>${calculateTotalAmount()}</h1>
+                <h1>{calculateTotalAmount()}</h1>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div className="text-black" style={{ zIndex: 10, position: "relative" }}>
+        <table
+          className="table mt-2"
+          style={{
+            width: "100%",
+          }}
+        >
+          <tbody style={{ zIndex: 10 }}>
+            <tr>
+              <td></td>
+              <td
+                style={{
+                  textAlign: "right",
+                  width: "100%",
+                }}
+              >
+                <img
+                  src={google}
+                  style={{
+                    height: "100px",
+                    position: "absolute",
+                    right: "10px",
+                  }}
+                  alt="Google Logo"
+                />
+                <br />
+                <h5 className="m-2" style={{ marginTop: "80px" }}>
+                  Authorized Signature
+                </h5>
               </td>
             </tr>
           </tbody>

@@ -15,8 +15,9 @@ const PostProductsPage = () => {
   });
 
   const token = localStorage.getItem("token");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [gstOptions, setGstOptions] = useState([]);
+  const [gstOptions, setGstOptions] = useState([5, 10, 15, 28, 50]);
   const [customGst, setCustomGst] = useState("");
 
   const handleAddGstOption = () => {
@@ -222,6 +223,17 @@ const PostProductsPage = () => {
     }
   };
 
+  function handleModalOpen() {
+    console.log("open");
+
+    setIsModalOpen(true);
+    console.log(2);
+  }
+
+  useEffect(() => {
+    console.log(isModalOpen, "oo");
+  }, [isModalOpen]);
+
   return (
     <div className="flex-1 overflow-auto relative z-10">
       <Header title="Products" />
@@ -266,25 +278,6 @@ const PostProductsPage = () => {
               />
             </div>
 
-            {/* <div>
-							<label className="block text-sm font-medium text-gray-200 mb-2">Categories</label>
-							<div className="flex flex-wrap gap-2">
-								{categories.map((category) => (
-									<button
-										type="button"
-										key={category.id}
-										onClick={() => handleCategorySelect(category.id)}
-										className={`px-4 py-2 rounded-lg ${formData.categoryIds.includes(category.id)
-											? "bg-blue-500 text-white"
-											: "bg-gray-700 text-gray-200"
-											}`}
-									>
-										{category.categoryName}
-									</button>
-								))}
-							</div>
-						</div> */}
-
             <div>
               <label className="block text-sm font-medium text-gray-200 mb-2">
                 Categories
@@ -316,25 +309,6 @@ const PostProductsPage = () => {
               </p>
             </div>
 
-            {/* <div>
-							<label className="block text-sm font-medium text-gray-200 mb-2">Tags</label>
-							<div className="flex flex-wrap gap-2">
-								{availableTags.map((tag) => (
-									<button
-										type="button"
-										key={tag}
-										onClick={() => handleTagSelect(tag)}
-										className={`px-4 py-2 rounded-lg ${formData.tags.includes(tag)
-												? "bg-blue-500 text-white"
-												: "bg-gray-700 text-gray-200"
-											}`}
-									>
-										{tag}
-									</button>
-								))}
-							</div>
-						</div> */}
-
             <div>
               <label className="block text-sm font-medium text-gray-200 mb-2">
                 Tags
@@ -362,107 +336,23 @@ const PostProductsPage = () => {
               </p>
             </div>
 
-            {/* {formData.attributesJson.map((attribute, index) => (
-							<div key={index}>
-								<h4 className="text-sm text-gray-300 mb-2">Attributes Group {index + 1}</h4>
-								<div className="mb-2">
-									<label className="block text-sm text-gray-200">Price</label>
-									<input
-										type="number"
-										placeholder="Price"
-										value={attribute.price}
-										onChange={(e) => {
-											const updatedAttributes = [...formData.attributesJson];
-											updatedAttributes[index].price = parseFloat(e.target.value);
-											setFormData({ ...formData, attributesJson: updatedAttributes });
-										}}
-										className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-									/>
-								</div>
-								
-								{attribute.fields.map((field, fieldIndex) => (
-									<div key={fieldIndex} className="flex space-x-4 mb-2">
-										<input
-											type="text"
-											placeholder="Field Key"
-											value={field.name}
-											onChange={(e) => handleNestedChange(index, fieldIndex, "name", e.target.value)}
-											className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-										/>
-										<input
-											type="text"
-											placeholder="Field Value"
-											value={field.value}
-											onChange={(e) => handleNestedChange(index, fieldIndex, "value", e.target.value)}
-											className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-										/>
-									</div>
-								))}
-
-								<button type="button" onClick={() => handleAddField(index)} className="text-blue-500 text-sm">+ Add Field</button>
-
-							</div>
-						))} */}
-
-            {/* <button type="button" onClick={handleAddAttribute} className="text-blue-500 text-sm">+ Add Attribute Group</button> */}
-
-            <div className="flex space-x-4 mb-4">
-              <div className="w-1/2">
-                <label className="block text-sm text-gray-200 mb-2">GST</label>
-                <select
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                  onChange={(e) => {
-                    const selectedGst = e.target.value;
-                    // Update the state or handle the selected GST value
-                  }}
-                >
-                  <option value="">Select GST</option>
-                  {gstOptions.map((gst, index) => (
-                    <option key={index} value={gst}>
-                      {gst}%
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="w-1/2">
-                <label className="block text-sm text-gray-200 mb-2">
-                  Add Custom GST
-                </label>
-                <div className="flex">
+            <div>
+              Ragular Price
+              <div className="flex space-x-4 mb-2 mt-2">
+                <label className="w-full block text-sm text-gray-200">
                   <input
-                    type="text"
-                    value={customGst}
-                    onChange={(e) => setCustomGst(e.target.value)}
-                    placeholder="Enter GST"
-                    className="flex-grow bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                    type="number"
+                    placeholder="Ragular Price"
+                    className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
                   />
-                  <button
-                    type="button"
-                    onClick={handleAddGstOption}
-                    className="ml-2 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition"
-                  >
-                    Add
-                  </button>
-                </div>
+                </label>
               </div>
-            </div>
-
-            {/* price */}
-            <div className="flex space-x-4 mb-2">
-              <label className="w-full block text-sm text-gray-200">
-                <input
-                  type="number"
-                  placeholder="Price"
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                />
-              </label>
             </div>
 
             {/* selling price */}
             <div>
               <label className="block text-sm font-medium text-gray-200 mb-2">
-                Selling Price
+                Sale Price
               </label>
               <div className="flex items-center space-x-4">
                 <label className="flex items-center text-gray-200">
@@ -470,9 +360,9 @@ const PostProductsPage = () => {
                     type="radio"
                     name="sellingPriceToggle"
                     value="yes"
+                    className="form-radio text-blue-500"
                     onChange={(e) => handleSellingPriceToggle(e.target.value)}
                     checked={showSellingPrice}
-                    className="form-radio text-blue-500"
                   />
                   <span className="ml-2">On</span>
                 </label>
@@ -481,9 +371,9 @@ const PostProductsPage = () => {
                     type="radio"
                     name="sellingPriceToggle"
                     value="no"
+                    className="form-radio text-blue-500"
                     onChange={(e) => handleSellingPriceToggle(e.target.value)}
                     checked={!showSellingPrice}
-                    className="form-radio text-blue-500"
                   />
                   <span className="ml-2">Off</span>
                 </label>
@@ -491,7 +381,7 @@ const PostProductsPage = () => {
               {showSellingPrice && (
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Enter Selling Price
+                    Enter Sale Price
                   </label>
                   <input
                     type="number"
@@ -499,13 +389,11 @@ const PostProductsPage = () => {
                     value={sellingPrice}
                     onChange={(e) => setSellingPrice(e.target.value)}
                     className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter selling price"
+                    placeholder="Enter sale price"
                   />
                 </div>
               )}
             </div>
-
-            {/* gst option */}
 
             {/* Attributes */}
 
@@ -515,7 +403,9 @@ const PostProductsPage = () => {
                   Attributes Group {index + 1}
                 </h4>
                 <div className="mb-2">
-                  <label className="block text-sm text-gray-200">Price</label>
+                  <label className="block text-sm text-gray-200 mb-2">
+                    Price
+                  </label>
                   <input
                     type="number"
                     placeholder="Price"
@@ -600,6 +490,62 @@ const PostProductsPage = () => {
             >
               + Add Attribute Group
             </button>
+
+            {/* gst option */}
+            <div className="flex space-x-4 mb-4">
+              <div className="w-1/2">
+                <label className="block text-sm text-gray-200 mb-2">GST</label>
+                <select
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => {
+                    if (e.target.value === "custom") handleModalOpen();
+                    else setIsModalOpen(false);
+                  }}
+                >
+                  <option value="">Select GST</option>
+                  <option value="custom">Custom</option>
+                  {gstOptions.map((gst, index) => (
+                    <option key={index} value={gst}>
+                      {gst}%
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {isModalOpen && (
+                <div className="w-1/2 color-white">
+                  <label className="block text-sm text-gray-200 mb-2">
+                    Add Custom GST
+                  </label>
+                  <div className="flex">
+                    <input
+                      type="text"
+                      value={customGst}
+                      onChange={(e) => setCustomGst(e.target.value)}
+                      placeholder="Enter GST"
+                      className="flex-grow bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddGstOption}
+                      className="ml-2 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* price
+            <div className="flex space-x-4 mb-2">
+              <label className="w-full block text-sm text-gray-200">
+                <input
+                  type="number"
+                  placeholder="Price"
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                />
+              </label>
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium text-gray-200 mb-2">

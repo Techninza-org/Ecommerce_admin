@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Search, Eye } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 import Cookies from "js-cookie";
 
 const OrdersTable = ({ data }) => {
@@ -37,8 +36,6 @@ const OrdersTable = ({ data }) => {
   const handleStatusChange = async (orderId, newStatus) => {
     console.log("inside handleStatusChange");
 
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoxLCJpYXQiOjE3MzU4ODI4NzcsImV4cCI6MTczNjc0Njg3N30.TAvxUdkkYT0mnPDKF-EIuySREq3YMoctuAcnOIQwCQk";
     try {
       const response = await axios.put(
         "http://45.198.14.69:3000/api/seller/updateOrderStatus",
@@ -93,41 +90,31 @@ const OrdersTable = ({ data }) => {
           <thead>
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Order ID{" "}
-              </th>
-
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Payment Mode{" "}
+                Order ID
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
+                Payment Mode
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
                 Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Amount{" "}
+                Amount
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Status{" "}
+                Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Date{" "}
+                Date
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Pincode{" "}
+                Pincode
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Change Status{" "}
+                Change Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Actions{" "}
+                Actions
               </th>
             </tr>
           </thead>
@@ -145,8 +132,9 @@ const OrdersTable = ({ data }) => {
                 </td>
 
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center">
-                  {String(order.isCod)}
+                  {order.isCod ? "COD" : "Online"}
                 </td>
+
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center">
                   {order.user.name}
                 </td>
@@ -157,7 +145,7 @@ const OrdersTable = ({ data }) => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 ">
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      order.orderStatus === "PAYMENT_PENDING" //if constions
+                      order.orderStatus === "PAYMENT_PENDING"
                         ? "bg-yellow-600 text-white-100"
                         : order.orderStatus === "PAYMENT_RECEIVED"
                         ? "bg-green-400 text-white-100"
@@ -171,7 +159,7 @@ const OrdersTable = ({ data }) => {
                         ? "bg-red-400 text-white-100"
                         : order.orderStatus === "NOT_DELIVERED"
                         ? "bg-red-800 text-white-100"
-                        : "bg-red-100 text-white-100" //esle condition
+                        : "bg-red-100 text-white-100"
                     }`}
                   >
                     {order.orderStatus}
@@ -194,11 +182,7 @@ const OrdersTable = ({ data }) => {
                     <option value="" disabled selected>
                       Update Status
                     </option>
-                    {/* <option value="PAYMENT_PENDING">PAYMENT_PENDING</option> */}
-                    <option value="PAYMENT_PENDING">NOT_DELIVERED</option>
-                    {/* <option value="PAYMENT_RECEIVED">PAYMENT_RECEIVED</option> */}
-                    {/* <option value="ORDER_CONFIRMED">ORDER_CONFIRMED</option> */}
-                    {/* <option value="ORDER_SHIPPED">ORDER_SHIPPED</option> */}
+                    <option value="NOT_DELIVERED">NOT_DELIVERED</option>
                     <option value="ORDER_DELIVERED">ORDER_DELIVERED</option>
                     <option value="ORDER_CANCELLED">ORDER_CANCELLED</option>
                   </select>
@@ -217,4 +201,5 @@ const OrdersTable = ({ data }) => {
     </motion.div>
   );
 };
+
 export default OrdersTable;

@@ -25,20 +25,19 @@ import AttributePage from "./pages/AttributePage";
 import FilterPage from "./pages/FilterPage";
 import Settingb from "./pages/Settingb";
 import Sgstn from "./pages/Sgstn";
-import TermandCondition from "./pages/TermandCondition";
+
 import StatckPage from "./pages/StatckPage";
-import Privacy from "./pages/Privacy";
-import Refundpolicy from "./pages/Refundpolicy";
-import Contactus from "./pages/Contactus";
+
+import TagTable from "./components/Tags/TagTable";
 
 function App() {
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      navigate("/login");
+      // navigate("/login");
     }
   }, []);
 
@@ -97,11 +96,10 @@ function App() {
           <Route path="/filter" element={<FilterPage />} />
           <Route path="/settingb" element={<Settingb />} />
           <Route path="/sgstn" element={<Sgstn />} />
-          <Route path="/term" element={<TermandCondition />} />
+
           <Route path="/StatckPage" element={<StatckPage />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/refund" element={<Refundpolicy />} />
-          <Route path="/contact" element={<Contactus />} />
+
+          <Route path="/tagtable" element={<TagTable />} />
         </Routes>
       </div>
     </div>

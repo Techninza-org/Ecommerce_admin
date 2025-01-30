@@ -75,18 +75,73 @@ const orderData = [
 ];
 
 const BannerTable = ({ data }) => {
-  console.log("banner table test1: ", data);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredBanner, setFilteredBanner] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newBanner, setNewBanner] = useState({ name: "", imageUrl: "" });
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    bannerName: "",
+    images: [], // Updated to handle multiple files
+  });
+
+  const handleInputsChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleFilesChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      images: Array.from(e.target.files), // Convert FileList to an array
+    }));
+  };
+
+  const handlesSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append("bannerName", formData.bannerName);
+
+    // Append each selected image to the FormData
+    formData.images.forEach((image) => {
+      data.append("images", image);
+    });
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        "http://45.198.14.69:3000/api/admin/createBanner",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+            "Cache-Control": "no-cache",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Banner created successfully:", response.data);
+        // Optionally refresh the banner list
+        // setBanners((prevBanners) => [...prevBanners, response.data.banner]);
+      } else {
+        console.log("Error creating banner");
+      }
+    } catch (error) {
+      console.error("Error creating banner: ", error);
+    }
+  };
 
   useEffect(() => {
     setFilteredBanner(data);
-    console.log("set filter banner: ", data);
   }, [data]);
-
-  console.log("all banners test2: ", filteredBanner);
 
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
@@ -100,9 +155,7 @@ const BannerTable = ({ data }) => {
   };
 
   const handleActiveUnActiveToggle = async (bannerId) => {
-    console.log("inside handleStatusChange");
-
-    const token = Cookies.get("token");
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.put(
         "http://45.198.14.69:3000/api/admin/activeUnActiveBanner",
@@ -110,24 +163,18 @@ const BannerTable = ({ data }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${Cookies.get("token")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      console.log("response", response.data);
-
       if (response.status === 200) {
-        alert(`message: ${response.data.message}, status: ${response.status}`);
-
-        const updatedBanners = await Promise.all(
-          filteredBanner.map(async (banner) => {
-            if (banner.id === bannerId) {
-              banner.isActive = !banner.isActive;
-            }
-            return banner;
-          })
-        );
+        const updatedBanners = filteredBanner.map((banner) => {
+          if (banner.id === bannerId) {
+            banner.isActive = !banner.isActive;
+          }
+          return banner;
+        });
 
         setFilteredBanner(updatedBanners);
       } else {
@@ -139,47 +186,15 @@ const BannerTable = ({ data }) => {
   };
 
   const handleBannerPreview = (banner) => {
-    console.log("passed banner: ", banner);
     navigate("/preview-banner", { state: { banner: banner } });
   };
 
   const handleDeleteBanner = async (bannerId) => {
-    console.log("inside handleDeleteBanner");
-
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this banner?"
     );
     if (!isConfirmed) {
       return;
-    }
-
-    const token = Cookies.get("token");
-
-    try {
-      const response = await axios.delete(
-        "http://45.198.14.69:3000/api/admin/generateCoupon",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          data: {
-            bannerId: bannerId,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        const updatedBanners = filteredBanner.filter(
-          (banner) => banner.id !== bannerId
-        );
-        setFilteredBanner(updatedBanners);
-        alert(`message: ${response.data.message}, status: ${response.status}`);
-      }
-
-      console.log(`delete banner response: ${response.data}`);
-    } catch (error) {
-      console.log("Error deleting banner: ", error);
     }
   };
 
@@ -193,7 +208,11 @@ const BannerTable = ({ data }) => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-100">Order List</h2>
 
-        <div className="relative">
+        <div className=" bg-blue-700 text-white rounded-lg px-4 py-2 absolute right-6 top-2 ">
+          <button onClick={() => setIsModalOpen(true)}>ADD Banner</button>
+        </div>
+
+        <div className="relative top-8">
           <input
             type="text"
             placeholder="Search orders..."
@@ -210,42 +229,33 @@ const BannerTable = ({ data }) => {
           <thead>
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Banner ID{" "}
+                Banner ID
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
                 Banner Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Total Imges{" "}
+                Total Images
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Active Status{" "}
+                Active Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Date{" "}
+                Date
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Active / In-Active{" "}
+                Active / In-Active
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Preview{" "}
+                Preview
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                {" "}
-                Actions{" "}
+                Actions
               </th>
-              {/* <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'> Actions </th> */}
             </tr>
           </thead>
 
-          <tbody className="divide divide-gray-700">
+          <tbody className="divide-y divide-gray-700">
             {filteredBanner.map((banner) => (
               <motion.tr
                 key={banner.id}
@@ -271,7 +281,6 @@ const BannerTable = ({ data }) => {
 
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center">
                   <button onClick={() => handleActiveUnActiveToggle(banner.id)}>
-                    {" "}
                     {banner.isActive ? (
                       <ToggleRight size={24} color="green" />
                     ) : (
@@ -282,15 +291,18 @@ const BannerTable = ({ data }) => {
 
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center hover:text-green-200">
                   <button onClick={() => handleBannerPreview(banner)}>
-                    {" "}
-                    {<Eye />}
+                    <Eye />
                   </button>
                 </td>
 
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center hover:text-red-600">
-                  <button onClick={() => handleDeleteBanner(banner.id)}>
-                    {" "}
-                    {<LucideTrash2 />}
+                  <button
+                    onClick={() => {
+                      handleDeleteBanner(banner.id);
+                      window.location.reload();
+                    }}
+                  >
+                    <LucideTrash2 />
                   </button>
                 </td>
               </motion.tr>
@@ -298,6 +310,65 @@ const BannerTable = ({ data }) => {
           </tbody>
         </table>
       </div>
+
+      {isModalOpen && (
+        <form
+          onSubmit={handlesSubmit}
+          className="mb-2 space-y-4 fixed inset-0 top-40  bg-opacity-50"
+        >
+          <div className=" flex items-center justify-center  ">
+            <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-1/2 ">
+              <h3 className="text-lg font-semibold text-gray-100 mb-4">
+                Add New Banner
+              </h3>
+
+              <label className="block text-sm font-medium text-gray-100">
+                Banner Name
+              </label>
+              <input
+                type="text"
+                name="bannerName"
+                value={formData.bannerName}
+                onChange={handleInputsChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-gray-900"
+                required
+              />
+
+              <label className="block text-sm font-medium text-gray-100">
+                Images
+              </label>
+              <input
+                type="file"
+                name="images"
+                onChange={handleFilesChange}
+                className="mt-1 block w-full"
+                accept="image/*"
+                multiple // Allow multiple files
+                required
+              />
+
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    handleDeleteBanner(banner.id);
+                    window.location.reload();
+                  }}
+                  type="submit"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      )}
     </motion.div>
   );
 };

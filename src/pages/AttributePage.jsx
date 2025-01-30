@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 const AttributePage = () => {
   const [key, setKey] = useState("");
   const [values, setValues] = useState([""]);
-  const token = Cookies.get("token");
 
   const handleSetKeyValueData = async (e) => {
     e.preventDefault();

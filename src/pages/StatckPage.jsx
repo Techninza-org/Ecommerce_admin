@@ -1,29 +1,26 @@
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import MarkdownEditor from "@uiw/react-markdown-editor";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const StackPage = () => {
+  const [selectedContent, setSelectedContent] = useState("ABOUT US"); // State to track selected content
   const [formData, setFormData] = useState({
-    description: "", // Stores markdown content
+    aboutUs: "",
+    termsAndConditions: "",
+    privacyPolicy: "",
+    refundPolicy: "",
+    contactUs: "",
   });
-  const [selectedButton, setSelectedButton] = useState(""); // State to track selected button
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (!token) {
-      console.error("Token is not set");
-    }
-  }, [token]);
+  const token = localStorage.getItem("token");
 
   // Handle markdown editor changes
   const handleMarkdownChange = (content) => {
     setFormData((prevData) => ({
       ...prevData,
-      description: content,
+      [selectedContent]: content,
     }));
   };
 
@@ -31,34 +28,52 @@ const StackPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const payloadKey = selectedContent;
+    const payload = { [payloadKey]: formData[payloadKey] }; // Map content to API payload
+    console.log(payloadKey);
+
     try {
-      // Make the API request to submit the description
       const response = await axios.post(
         "http://45.198.14.69/api/admin/setLegalData",
-        {
-          aboutUs: formData.description, // Map to privacyPolicy
-        },
+        payload,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       if (response.status === 200) {
-        alert("Privacy Policy submitted successfully!");
+        alert(`${selectedContent} content submitted successfully!`);
       } else {
         alert("Something went wrong. Please try again.");
       }
     } catch (error) {
-      console.error("Error submitting the Privacy Policy:", error);
+      console.error("Error submitting the form:", error);
       alert("Error submitting the form. Check the console for details.");
     }
   };
 
-  // Handle button click
-  const handleButtonClick = (path) => {
-    setSelectedButton(path);
-    navigate(path);
+  const handleButtonClick = (label) => {
+    setSelectedContent(label);
   };
+
+  const renderEditor = () => (
+    <form onSubmit={handleSubmit} className="space-y-4 mt-5">
+      <div className="mb-3">
+        <MarkdownEditor
+          value={formData[selectedContent]}
+          onChange={handleMarkdownChange}
+          height={400}
+          className="z-10"
+        />
+      </div>
+      <button
+        type="submit"
+        className="w-40 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+      >
+        Submit
+      </button>
+    </form>
+  );
 
   return (
     <div className="flex-1 overflow-auto relative">
@@ -73,46 +88,30 @@ const StackPage = () => {
           transition={{ duration: 1 }}
         >
           {[
-            { path: "/StatckPage", label: "ABOUT US" },
-            { path: "/term", label: "TERMS & CONDITIONS" },
-            { path: "/privacy", label: "PRIVACY POLICY" },
-            { path: "/refund", label: "REFUND POLICY" },
-            { path: "/contact", label: "CONTACT US" },
-          ].map((button) => (
+            "ABOUT US",
+            "TERMS & CONDITIONS",
+            "PRIVACY POLICY",
+            "REFUND POLICY",
+            "CONTACT US",
+          ].map((label) => (
             <button
-              key={button.path}
-              onClick={() => handleButtonClick(button.path)}
+              key={label}
+              onClick={() => handleButtonClick(label)}
               className={`${
-                selectedButton === button.path
+                selectedContent === label
                   ? "bg-blue-600"
                   : "bg-blue-800 bg-opacity-50"
               } backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700`}
               style={{ height: "100px" }}
             >
-              {button.label}
+              {label}
             </button>
           ))}
         </motion.div>
 
-        {/* About Us Section */}
-        <h1 style={{ fontSize: "30px" }}>About US</h1>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-5">
-          <div className="mb-3">
-            <label htmlFor="description" className="form-label"></label>
-            <MarkdownEditor
-              value={formData.description}
-              onChange={handleMarkdownChange}
-              height={400}
-              className="z-10"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-40 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            Submit
-          </button>
-        </form>
+        {/* Dynamic Content Section */}
+        <h1 style={{ fontSize: "30px" }}>{selectedContent}</h1>
+        {renderEditor()}
       </main>
     </div>
   );

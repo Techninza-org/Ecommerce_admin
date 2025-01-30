@@ -17,12 +17,18 @@ import { Link, useLocation } from "react-router-dom";
 
 const SIDEBAR_ITEMS = [
   {
-    name: "Overview",
+    name: "Dashboard",
     icon: BarChart2,
     color: "#6366f1",
     href: "/",
   },
   { name: "Products", icon: ShoppingBag, color: "#8B5CF6", href: "/products" },
+  {
+    name: "Manual Tags",
+    icon: DollarSign,
+    color: "#10B981",
+    href: "/tagtable",
+  },
   {
     name: "Filter Management ",
     icon: ShoppingBag,

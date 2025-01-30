@@ -7,14 +7,13 @@ const ActiveCoupons = () => {
   const [error, setError] = useState(null);
 
   // Replace with your actual token
-  
 
+  const token = localStorage.getItem("token");
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        
         const response = await axios.get(
-          'http://45.198.14.69/api/admin/getAllCoupons',
+          "http://45.198.14.69/api/admin/getAllCoupons",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -47,7 +46,7 @@ const ActiveCoupons = () => {
         Active Coupons
       </h3>
       <div className="overflow-x-auto">
-        <table className="table-auto w-full border border-gray-300 rounded-lg bg-white">
+        <table className="table-auto w-full border border-gray-300 rounded-lg">
           <thead>
             <tr className="bg-gray-100 text-gray-700">
               <th className="px-4 py-2 border">ID</th>
