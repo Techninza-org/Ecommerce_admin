@@ -73,10 +73,7 @@ function App() {
           <Route path="/" element={<OverviewPage />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/post-products" element={<PostProduct />} />
-          <Route
-            path="/post-simple-product"
-            element={<CreateSimpleProduct />}
-          />
+          <Route path="/post-simple-product"element={<CreateSimpleProduct />}/>
           <Route path="/users" element={<UsersPage />} />
           <Route path="/category" element={<Category />} />
           <Route path="/orders" element={<OrdersPage />} />
@@ -87,10 +84,7 @@ function App() {
           <Route path="/order-details/:id" element={<OrderPage />} />
           <Route path="/preview-banner" element={<BannerPreview />} />
           <Route path="/productGroupPage" element={<ProductGroupPage />} />
-          <Route
-            path="/previewProductGroup"
-            element={<PreviewProductGroup />}
-          />
+          <Route path="/previewProductGroup" element={<PreviewProductGroup />}/>
           <Route path="/coupon" element={<CouponPage />} />
           <Route path="/application_data" element={<ApplicationDataPage />} />
           <Route path="/attribute_page" element={<AttributePage />} />

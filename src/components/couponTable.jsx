@@ -7,6 +7,7 @@ const ActiveCoupons = () => {
   const [error, setError] = useState(null);
 
   // Replace with your actual token
+  const token = localStorage.getItem("token");
   
 
   useEffect(() => {
@@ -21,8 +22,10 @@ const ActiveCoupons = () => {
             },
           }
         );
-        const { coupons } = response.data;
-        setCoupons(coupons);
+        // const { coupons } = response.data;
+
+        setCoupons(response.data.coupons);
+        console.log("Coupons:", response.data);
       } catch (err) {
         setError(err.message || "Failed to fetch coupons.");
       } finally {
@@ -43,7 +46,7 @@ const ActiveCoupons = () => {
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
-      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+      <h3 className="text-xl font-semibold text-gray-900 mb-4" style={{ color: "green" }}>
         Active Coupons
       </h3>
       <div className="overflow-x-auto">
@@ -61,22 +64,14 @@ const ActiveCoupons = () => {
           </thead>
           <tbody>
             {coupons.map((coupon) => (
-              <tr key={coupon.id} className="text-center">
+              <tr className="text-center" style={{ color: "black" }} key={coupon.id}>
                 <td className="px-4 py-2 border">{coupon.id}</td>
                 <td className="px-4 py-2 border">{coupon.couponCode}</td>
                 <td className="px-4 py-2 border">{coupon.couponValue}</td>
-                <td className="px-4 py-2 border">
-                  {coupon.isPrecent ? "Percentage" : "Flat"}
-                </td>
-                <td className="px-4 py-2 border">
-                  {coupon.couponName || "N/A"}
-                </td>
-                <td className="px-4 py-2 border">
-                  {coupon.couponDesc || "N/A"}
-                </td>
-                <td className="px-4 py-2 border">
-                  {new Date(coupon.expiryDate).toLocaleDateString()}
-                </td>
+                <td className="px-4 py-2 border">{coupon.isPrecent ? "Percentage" : "Flat"}</td>
+                <td className="px-4 py-2 border">{coupon.couponName || "N/A"}</td>
+                <td className="px-4 py-2 border">{coupon.couponDesc || "N/A"}</td>
+                <td className="px-4 py-2 border">{new Date(coupon.expiryDate).toLocaleDateString()}</td>
               </tr>
             ))}
           </tbody>
