@@ -13,11 +13,14 @@ const CouponPage = () => {
   const [isPercentage, setIsPercentage] = useState(true); // Whether the value is percentage
   const [couponExpiryInDays, setCouponExpiryInDays] = useState(""); // Expiry duration input
 
+  const [couponExpiryDate, setCouponExpiryDate] = useState(""); // Expiry date input
+
   // Handle coupon submission
   const handleCouponSubmit = async (e) => {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
+    const expiryDays = calculateExpiryDays(couponExpiryDate);
 
     try {
       const requestBody = {
@@ -26,7 +29,8 @@ const CouponPage = () => {
         desc,
         couponValue: parseFloat(couponValue), // Convert to number
         isPercentage,
-        couponExpiryInDays: parseInt(couponExpiryInDays, 10), // Convert to number
+        // couponExpiryInDays: parseInt(couponExpiryInDays, 10), // Convert to number
+        couponExpiryInDays: expiryDays, // Convert to number
       };
 
       const response = await axios.post(
@@ -49,6 +53,14 @@ const CouponPage = () => {
       );
       alert("Failed to generate coupon. Please try again.");
     }
+  };
+
+  const calculateExpiryDays = (date) => {
+    const today = new Date();
+    const expiryDate = new Date(date);
+    const differenceInTime = expiryDate - today;
+
+    return Math.ceil(differenceInTime / (1000 * 60 * 60 * 24)); // Convert to days
   };
 
   return (
@@ -135,7 +147,7 @@ const CouponPage = () => {
               />
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-200 mb-2">Expiry (in days)</label>
               <input
                 type="number"
@@ -145,6 +157,20 @@ const CouponPage = () => {
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter expiry in days"
                 style={{ width: "40%" }}
+              />
+            </div> */}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-200 mb-2">
+                Expiry Date
+              </label>
+              <input
+                type="date"
+                value={couponExpiryDate}
+                onChange={(e) => setCouponExpiryDate(e.target.value)}
+                required
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Select expiry date"
               />
             </div>
 

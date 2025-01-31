@@ -24,7 +24,6 @@ const ActiveCoupons = () => {
             },
           }
         );
-        // const { coupons } = response.data;
 
         setCoupons(response.data.coupons);
         console.log("Coupons:", response.data);
@@ -50,7 +49,7 @@ const ActiveCoupons = () => {
 
     const isConfirmed = window.confirm("Are you sure you want to delete this coupon?");
     if (!isConfirmed) { return; }
-    
+
     try {
       
       const response = await axios.delete(`http://45.198.14.69/api/admin/deleteCoupon/${couponId}`,
@@ -60,8 +59,6 @@ const ActiveCoupons = () => {
           }
         }
       );
-
-      // console.log("Delete response:", response.status);
 
       if (response.status === 200) {
         alert("Coupon deleted successfully!");
@@ -73,20 +70,19 @@ const ActiveCoupons = () => {
     } catch (error) {
       console.error("Error deleting coupon:", error);
       alert("Failed to delete coupon. Please try again.");
-      
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
-      <h3 className="text-xl font-semibold text-gray-900 mb-4" style={{ color: "green" }}>
-        Active Coupons
-      </h3>
+      
+      <h3 className="text-xl font-semibold text-gray-900 mb-4" style={{ color: "green" }}> Active Coupons </h3>
+
       <div className="overflow-x-auto">
-        {/* <table className="table-auto w-full border border-gray-300 rounded-lg bg-white"> */}
+
         <table className="min-w-full divide-y divide-gray-700">
+
           <thead>
-            {/* <tr className="bg-gray-100 text-gray-700"> */}
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">ID</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">Coupon Code</th>
@@ -97,15 +93,10 @@ const ActiveCoupons = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">Expiry Date</th>
             </tr>
           </thead>
+
           <tbody>
             {coupons.map((coupon) => (
-              <motion.tr
-                key={coupon.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                style={{ color: "black" }}
-              >
+              <motion.tr key={coupon.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} style={{ color: "black" }}>
 
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{coupon.id}</td>
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{coupon.couponCode}</td>
@@ -120,8 +111,11 @@ const ActiveCoupons = () => {
               </motion.tr>
             ))}
           </tbody>
+          
         </table>
+
       </div>
+
     </div>
   );
 };
