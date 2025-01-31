@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { Trash2 } from "lucide-react";
 
 const ActiveCoupons = () => {
   const [coupons, setCoupons] = useState([]);
@@ -8,12 +10,12 @@ const ActiveCoupons = () => {
 
   // Replace with your actual token
   const token = localStorage.getItem("token");
-  
+
 
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        
+
         const response = await axios.get(
           'http://45.198.14.69/api/admin/getAllCoupons',
           {
@@ -44,35 +46,78 @@ const ActiveCoupons = () => {
     return <div className="text-red-500">Error: {error}</div>;
   }
 
+  const handleDelete = async (couponId) => {
+
+    const isConfirmed = window.confirm("Are you sure you want to delete this coupon?");
+    if (!isConfirmed) { return; }
+    
+    try {
+      
+      const response = await axios.delete(`http://45.198.14.69/api/admin/deleteCoupon/${couponId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+
+      // console.log("Delete response:", response.status);
+
+      if (response.status === 200) {
+        alert("Coupon deleted successfully!");
+        setCoupons((prev) => prev.filter((coupon) => coupon.id !== couponId));
+      } else {
+        alert("Failed to delete coupon. Please try again.");
+      }
+
+    } catch (error) {
+      console.error("Error deleting coupon:", error);
+      alert("Failed to delete coupon. Please try again.");
+      
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
       <h3 className="text-xl font-semibold text-gray-900 mb-4" style={{ color: "green" }}>
         Active Coupons
       </h3>
       <div className="overflow-x-auto">
-        <table className="table-auto w-full border border-gray-300 rounded-lg bg-white">
+        {/* <table className="table-auto w-full border border-gray-300 rounded-lg bg-white"> */}
+        <table className="min-w-full divide-y divide-gray-700">
           <thead>
-            <tr className="bg-gray-100 text-gray-700">
-              <th className="px-4 py-2 border">ID</th>
-              <th className="px-4 py-2 border">Coupon Code</th>
-              <th className="px-4 py-2 border">Value</th>
-              <th className="px-4 py-2 border">Type</th>
-              <th className="px-4 py-2 border">Name</th>
-              <th className="px-4 py-2 border">Description</th>
-              <th className="px-4 py-2 border">Expiry Date</th>
+            {/* <tr className="bg-gray-100 text-gray-700"> */}
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">Coupon Code</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">Value</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">Type</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">Description</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">Expiry Date</th>
             </tr>
           </thead>
           <tbody>
             {coupons.map((coupon) => (
-              <tr className="text-center" style={{ color: "black" }} key={coupon.id}>
-                <td className="px-4 py-2 border">{coupon.id}</td>
-                <td className="px-4 py-2 border">{coupon.couponCode}</td>
-                <td className="px-4 py-2 border">{coupon.couponValue}</td>
-                <td className="px-4 py-2 border">{coupon.isPrecent ? "Percentage" : "Flat"}</td>
-                <td className="px-4 py-2 border">{coupon.couponName || "N/A"}</td>
-                <td className="px-4 py-2 border">{coupon.couponDesc || "N/A"}</td>
-                <td className="px-4 py-2 border">{new Date(coupon.expiryDate).toLocaleDateString()}</td>
-              </tr>
+              <motion.tr
+                key={coupon.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+                style={{ color: "black" }}
+              >
+
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{coupon.id}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{coupon.couponCode}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{coupon.couponValue}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{coupon.isPrecent ? "Percentage" : "Flat"}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{coupon.couponName || "N/A"}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{coupon.couponDesc || "N/A"}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{new Date(coupon.expiryDate).toLocaleDateString()}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
+                  <button className="text-red-400 hover:text-red-300" onClick={() => handleDelete(coupon.id)}><Trash2 size={20} /></button>
+                </td>
+              </motion.tr>
             ))}
           </tbody>
         </table>

@@ -145,7 +145,7 @@ const OrdersTable = ({ data }) => {
                 </td>
 
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center">
-                  {String(order.isCod)}
+                  {order.isCod ? "COD" : "PREPAID"}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 text-center">
                   {order.user.name}
