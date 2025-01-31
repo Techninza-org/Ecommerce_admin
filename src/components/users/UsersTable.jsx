@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Search, Trash2 } from "lucide-react";
+import axios from "axios";
 
 const UsersTable = ({ data }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,19 +38,30 @@ const UsersTable = ({ data }) => {
         if (!token) {
           throw new Error("No API token found in local storage.");
         }
-        const response = await fetch(
-          `http://45.198.14.69:3000/api/admin/deleteCategoryById`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ categoryId: id }), // Pass the ID in the request body
-          }
-        );
+        // const response = await fetch(
+        //   // `http://45.198.14.69:3000/api/admin/deleteCategoryById`,
+        //   `http://45.198.14.69/api/admin/deleteUser/${id}`,
+        //   {
+        //     method: "DELETE",
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //     // body: JSON.stringify({ categoryId: id }), // Pass the ID in the request body
+        //   }
+        // );
 
-        if (response.ok) {
+        const response = await axios.delete(`http://45.198.14.69/api/admin/deleteUser/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }
+          }
+        )
+
+        console.log("Response: ", response.data);
+
+        if (response.status === 200) {
           alert("User deleted successfully");
           setFilteredUsers((prevUsers) =>
             prevUsers.filter((user) => user.id !== id)

@@ -53,11 +53,10 @@ const ProductsTable = ({ data }) => {
   const handleToggle = async (productId) => {
     try {
       const token = localStorage.getItem("token");
-      console.log("Token: ", token);
+      // console.log("Token: ", token);
 
-      if (!token) {
-        throw new Error("No API token found in local storage.");
-      }
+      if (!token) { throw new Error("No API token found in local storage."); }
+
       // API call to toggle the product's active status
       const response = await axios.put(
         "http://45.198.14.69:3000/api/seller/toggleIsActiveByProductId",
@@ -68,16 +67,12 @@ const ProductsTable = ({ data }) => {
           },
         }
       );
-      // Optionally, update the product list based on the response
+
       console.log(response.data);
+
       // You can update filteredProducts to reflect the change if needed
-      setFilteredProducts((prevProducts) =>
-        prevProducts.map((product) =>
-          product.id === productId
-            ? { ...product, isActive: !product.isActive }
-            : product
-        )
-      );
+      setFilteredProducts((prevProducts) => prevProducts.map((product) => product.id === productId ? { ...product, isActive: !product.isActive } : product ));
+
     } catch (error) {
       console.error("Error toggling product status:", error);
     }
@@ -132,132 +127,43 @@ const ProductsTable = ({ data }) => {
       transition={{ delay: 0.2 }}
     >
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-100">
-          Total Products: {filterProducts.length}
-        </h2>
-
-        {/* <div className="flex gap-4 items-center">
-
-					<div className="flex items-center gap-2">
-						<DatePicker
-							selected={startDate}
-							onChange={(date) => handleDateChange(date, endDate)}
-							selectsStart
-							startDate={startDate}
-							endDate={endDate}
-							placeholderText="Start Date"
-							className="bg-gray-700 text-white placeholder-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-						/>
-						<DatePicker
-							selected={endDate}
-							onChange={(date) => handleDateChange(startDate, date)}
-							selectsEnd
-							startDate={startDate}
-							endDate={endDate}
-							placeholderText="End Date"
-							className="bg-gray-700 text-white placeholder-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-						/>
-					</div>
-
-					<div className="relative">
-						<input
-							type="text"
-							placeholder="Search products..."
-							className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-							onChange={handleSearch}
-							value={searchTerm}
-						/>
-						<Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
-					</div>
-
-				</div> */}
+        <h2 className="text-xl font-semibold text-gray-100"> Total Products: {filterProducts.length} </h2>
       </div>
 
       <div className="overflow-x-auto">
+
         <table className="min-w-full divide-y divide-gray-700">
+
           <thead>
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                ProductId
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                Category
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                Price
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                SimpleProduct
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                Date
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                Active status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                Actions
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center">
-                Active/Un-Active
-              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"> Name </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center"> ProductId </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center"> Category </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center"> Price </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center"> SimpleProduct </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center"> Date </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center"> Active status </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center"> Actions </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider text-center"> Active/Un-Active </th>
             </tr>
           </thead>
 
           <tbody className="divide-y divide-gray-700">
             {filteredProducts.map((product) => (
-              <motion.tr
-                key={product.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
+              <motion.tr key={product.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-100 flex gap-2 items-center">
-                  {" "}
-                  <img
-                    src={APIs.BASE_URL_FOR_IMAGE + product.images[0]?.imageUrl}
-                    alt="Product img"
-                    className="size-10 rounded-full"
-                  />{" "}
-                  {product.name}{" "}
-                </td>
-                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-                  {product?.id}
-                </td>
-                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-                  {product?.category[0]?.categoryName}
-                </td>
-                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-                  $
-                  {product?.price !== null
-                    ? product.price
-                    : product.attributes[0].price}
-                </td>
-                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-                  {product?.isSimpleProduct ? "true" : "false"}
-                </td>
-                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-                  {new Date(product.createdAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  })}
-                </td>
-                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-                  {product?.isActive ? "true" : "false"}
+                  <img src={APIs.BASE_URL_FOR_IMAGE + product.images[0]?.imageUrl} alt="Product img" className="size-10 rounded-full" />{product.name}
                 </td>
 
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{product?.id}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{product?.category[0]?.categoryName}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">${product?.price !== null ? product.price : product.attributes[0].price}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{product?.isSimpleProduct ? "true" : "false"}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{new Date(product.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "2-digit", day: "2-digit", })} </td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">{product?.isActive ? "Active" : "Inactive"}</td>
+
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-                  {/* <button className="text-indigo-400 hover:text-indigo-300 mr-2"><Edit size={20} /></button> */}
-                  <button
-                    className="text-red-400 hover:text-red-300"
-                    onClick={() => handleDelete(product.id)}
-                  >
-                    <Trash2 size={20} />
-                  </button>
+                  <button className="text-red-400 hover:text-red-300" onClick={() => handleDelete(product.id)}><Trash2 size={20} /></button>
                 </td>
 
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
@@ -265,18 +171,16 @@ const ProductsTable = ({ data }) => {
                     className="text-red-400 hover:text-red-300"
                     onClick={() => handleToggle(product.id)}
                   >
-                    {" "}
-                    {product.isActive ? (
-                      <ToggleRight size={20} color="green" />
-                    ) : (
-                      <ToggleLeft size={20} color="red" />
-                    )}
+                    {product.isActive ? (<ToggleRight size={20} color="green" />) : (<ToggleLeft size={20} color="red" />)}
                   </button>
                 </td>
+
               </motion.tr>
             ))}
           </tbody>
+
         </table>
+
       </div>
     </motion.div>
   );

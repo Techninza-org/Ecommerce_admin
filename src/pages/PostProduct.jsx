@@ -9,6 +9,7 @@ const PostProductsPage = () => {
     productDescription: "",
     taxPercentage: 0,
     salePricePercent: 0,
+    servingPrice: "",
     attributesJson: [{ price: "", mrp: "", quantity: "", thresholdQty: "", fields: [{ name: "", value: "" }] }],
     categoryIds: [],
     // imagesUrls: ["https://www.google.co.in/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "https://www.google.co.in/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"],
@@ -18,15 +19,15 @@ const PostProductsPage = () => {
 
   const token = localStorage.getItem("token");
 
-  const [gstOptions, setGstOptions] = useState([]);
-  const [customGst, setCustomGst] = useState("");
+  // const [gstOptions, setGstOptions] = useState([]);
+  // const [customGst, setCustomGst] = useState("");
 
-  const handleAddGstOption = () => {
-    if (customGst.trim() !== "" && !gstOptions.includes(customGst.trim())) {
-      setGstOptions([...gstOptions, customGst.trim()]);
-      setCustomGst("");
-    }
-  };
+  // const handleAddGstOption = () => {
+  //   if (customGst.trim() !== "" && !gstOptions.includes(customGst.trim())) {
+  //     setGstOptions([...gstOptions, customGst.trim()]);
+  //     setCustomGst("");
+  //   }
+  // };
 
   const [categories, setCategories] = useState([]);
   const [availableFields, setAvailableFields] = useState([]);
@@ -36,6 +37,9 @@ const PostProductsPage = () => {
     "SALE",
     "FRIDAY SALE",
   ]);
+
+  const [availableGsts, setAvailableGsts] = useState([18, 12, 5, 28]);
+  const [servingPrice, setServingPrice] = useState(0);
 
   useEffect(() => {
     // Fetch categories and tags from the server
@@ -208,6 +212,11 @@ const PostProductsPage = () => {
     }
   };
 
+  const handleInputChangeOfServingPrice = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: parseFloat(value) });
+  };
+
   return (
     <div className="flex-1 overflow-auto relative z-10">
       <Header title="Products" />
@@ -326,7 +335,7 @@ const PostProductsPage = () => {
                 />
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-200 mb-2"> Tax Percent </label>
                 <input
                   type="number"
@@ -337,16 +346,44 @@ const PostProductsPage = () => {
                   className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter product name"
                 />
+              </div> */}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2"> Serving Price </label>
+                <input
+                  type="number"
+                  name="servingPrice"
+                  value={formData.servingPrice}
+                  onChange={handleInputChangeOfServingPrice}
+                  required
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter product name"
+                />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2">GST</label>
+                <select
+                  name="taxPercentage"
+                  value={servingPrice}
+                  onChange={setServingPrice}
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Tax Percentage</option>
+                  {availableGsts.map((gst, index) => (
+                    <option key={index} value={gst}>{gst}%</option>
+                  ))}
+                </select>
+              </div>
+
             </div>
 
             {/* Attributes */}
 
             {formData.attributesJson.map((attribute, index) => (
               <div key={index}>
-                <h4 className="text-sm text-gray-300 mb-2">
-                  Varient {index + 1}
-                </h4>
+
+                <h4 className="text-sm text-gray-300 mb-2">Varient {index + 1}</h4>
                 <div className="mb-2 flex space-x-4">
 
                   <div>
@@ -380,7 +417,7 @@ const PostProductsPage = () => {
 
                   <div>
                     <label className="block text-sm text-gray-200">Threshold Qty</label>
-                    <input type="number" placeholder="threshold qty" value={attribute.thresholdQty} onChange={(e) => {
+                    <input type="number" placeholder="Threshold qty" value={attribute.thresholdQty} onChange={(e) => {
                       const updatedAttributes = [...formData.attributesJson];
                       updatedAttributes[index].thresholdQty = parseFloat(e.target.value);
                       setFormData({ ...formData, attributesJson: updatedAttributes });
@@ -389,7 +426,7 @@ const PostProductsPage = () => {
 
                   <div>
                     <label className="block text-sm text-gray-200">Available Qty</label>
-                    <input type="number" placeholder="threshold qty" value={attribute.quantity} onChange={(e) => {
+                    <input type="number" placeholder="Available qty" value={attribute.quantity} onChange={(e) => {
                       const updatedAttributes = [...formData.attributesJson];
                       updatedAttributes[index].quantity = parseFloat(e.target.value);
                       setFormData({ ...formData, attributesJson: updatedAttributes });
