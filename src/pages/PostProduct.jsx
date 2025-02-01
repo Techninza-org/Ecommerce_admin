@@ -158,12 +158,12 @@ const PostProductsPage = () => {
       return;
     }
 
-    if (
-      formData.attributesJson.some(
-        (attribute) =>
-          attribute.fields.some((field) => field.name === "" || field.value === "") || attribute.price === "" || attribute.mrp === "" || attribute.quantity === "" || attribute.thresholdQty === "" || attribute.mrp < attribute.price || attribute.thresholdQty > attribute.quantity
-      )
-    ) {
+    if (formData.attributesJson.some((attribute) => attribute.fields.length === 0)) {
+      alert("Please add at least one field to each attribute.");
+      return;
+    }
+
+    if (formData.attributesJson.some((attribute) => attribute.fields.some((field) => field.name === "" || field.value === "") || attribute.price === "" || attribute.mrp === "" || attribute.quantity === "" || attribute.thresholdQty === "" || attribute.mrp < attribute.price || attribute.thresholdQty > attribute.quantity)) {
       alert("Please fill all attribute fields and ensure MRP is greater than Price and Threshold Qty is less than Available Qty.");
       return;
     }
