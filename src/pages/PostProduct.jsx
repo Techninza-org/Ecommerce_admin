@@ -376,11 +376,16 @@ const PostProductsPage = () => {
                   value={formData.taxPercentage}
                   onChange={(e) => {
                     const { name, value } = e.target;
-                    setFormData({ ...formData, [name]: parseFloat(value) });
+                    // setFormData({ ...formData, [name]: parseFloat(value) });
+                    setFormData((prevFormData) => ({
+                      ...prevFormData,
+                      [name]: parseFloat(value),
+                    }));
                   }}
                   className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value={formData.taxPercentage}>{formData.taxPercentage === 0 ? "Select Tax Percentage" : formData.taxPercentage} %</option>
+                  {/* <option value={formData.taxPercentage}>{formData.taxPercentage === 0 ? "Select Tax Percentage" : formData.taxPercentage} %</option> */}
+                  <option value={0}>Select Tax Percentage</option>
                   {availableGsts.map((gst, index) => {
                     console.log("GST: ", gst);
                     console.log("GST Index: ", index);
