@@ -465,7 +465,7 @@ const PostProductsPage = () => {
                       type="button"
                       onClick={() => handleRevomeField(index, fieldIndex)}
                       className="text-red-500 text-sm"
-                      style={{ backgroundColor: "red", borderRadius: "5px", color: "white", padding: "5px" }}
+                      style={{ backgroundColor: "#a81618", borderRadius: "5px", color: "white", padding: "5px", alignSelf: "center" }}
                     >
                       Remove
                     </button>
