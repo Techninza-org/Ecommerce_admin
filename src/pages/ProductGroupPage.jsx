@@ -99,6 +99,7 @@ const ProductGroupPage = () => {
       if (!token) {
         throw new Error("No API token found in local storage.");
       }
+      
       await axios.post(
         "http://45.198.14.69/api/seller/createProductGroup",
         payload,

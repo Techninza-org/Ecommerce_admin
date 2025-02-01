@@ -30,6 +30,7 @@ import StatckPage from "./pages/StatckPage";
 import Privacy from "./pages/Privacy";
 import Refundpolicy from "./pages/Refundpolicy";
 import Contactus from "./pages/Contactus";
+import ReturnedOrderProductPage from "./pages/ReturnedOrderProductPage";
 
 function App() {
   const location = useLocation();
@@ -96,6 +97,7 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/refund" element={<Refundpolicy />} />
           <Route path="/contact" element={<Contactus />} />
+          <Route path="/returned-order-products" element={<ReturnedOrderProductPage />} />
         </Routes>
       </div>
     </div>

@@ -191,9 +191,7 @@ const OrdersTable = ({ data }) => {
                       handleStatusChange(order.id, e.target.value)
                     }
                   >
-                    <option value="" disabled selected>
-                      Update Status
-                    </option>
+                    <option value="" disabled selected> Update Status </option>
                     {/* <option value="PAYMENT_PENDING">PAYMENT_PENDING</option> */}
                     <option value="PAYMENT_PENDING">NOT_DELIVERED</option>
                     {/* <option value="PAYMENT_RECEIVED">PAYMENT_RECEIVED</option> */}

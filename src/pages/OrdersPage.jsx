@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, DollarSign, ShoppingBag } from "lucide-react";
+import { CheckCircle, Clock, DollarSign, RefreshCcw, RefreshCw, ShoppingBag } from "lucide-react";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
 
@@ -21,6 +21,7 @@ const orderStats = {
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token"); // Retrieve token from localStorage
@@ -85,8 +86,18 @@ const OrdersPage = () => {
             value={orderStats.pendingOrders}
             color="#F59E0B"
           />
-          {/* Uncomment and adjust the following as needed */}
-          {/* <StatCard name='Completed Orders' icon={CheckCircle} value={orderStats.completedOrders} color='#10B981' /> */}
+          {/* <StatCard name='Returns' icon={ShoppingBag} value={orderStats.completedOrders} color='#10B981' /> */}
+          <button
+            className="flex flex-col items-center justify-center bg-blue-800 bg-opacity-50 backdrop-blur-md overflow-hidden shadow-lg rounded-xl border border-gray-700 p-4"
+            style={{ height: "100px", width: "100%" }}
+            onClick={() => navigate("/returned-order-products")}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+
+              <RefreshCcw size={24} className="text-blue-400" />
+              <span className="text-white font-medium">Returns</span>
+            </div>
+          </button>
           {/* <StatCard name='Total Revenue' icon={DollarSign} value={orderStats.totalRevenue} color='#EF4444' /> */}
         </motion.div>
 
