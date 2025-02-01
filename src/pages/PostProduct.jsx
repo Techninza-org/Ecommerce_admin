@@ -153,6 +153,11 @@ const PostProductsPage = () => {
       return;
     }
 
+    if (formData.attributesJson.length === 0){
+      alert("Please add at least one attribute.");
+      return;
+    }
+
     if (
       formData.attributesJson.some(
         (attribute) =>
@@ -360,7 +365,7 @@ const PostProductsPage = () => {
                   onChange={handleInputChangeOfServingPrice}
                   required
                   className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter product name"
+                  placeholder="Serving Price"
                 />
               </div>
 
