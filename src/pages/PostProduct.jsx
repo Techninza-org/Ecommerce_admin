@@ -105,6 +105,18 @@ const PostProductsPage = () => {
     setFormData({ ...formData, attributesJson: updatedAttributes });
   };
 
+  const handleRevomeField = (index, fieldIndex) => {
+    const updatedAttributes = [...formData.attributesJson];
+    updatedAttributes[index].fields.splice(fieldIndex, 1);
+    setFormData({ ...formData, attributesJson: updatedAttributes });
+  };
+
+  const handleRemoveAttribute = (index) => {
+    const updatedAttributes = [...formData.attributesJson];
+    updatedAttributes.splice(index, 1);
+    setFormData({ ...formData, attributesJson: updatedAttributes });
+  };
+
   const handleAddAttribute = () => {
     setFormData({
       ...formData,
@@ -215,6 +227,10 @@ const PostProductsPage = () => {
   const handleInputChangeOfServingPrice = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: parseFloat(value) });
+  };
+
+  const isValidHashCodeColor = (hexCode) => {
+    return /^#[0-9A-F]{6}$/i.test(hexCode);
   };
 
   return (
@@ -335,19 +351,6 @@ const PostProductsPage = () => {
                 />
               </div>
 
-              {/* <div>
-                <label className="block text-sm font-medium text-gray-200 mb-2"> Tax Percent </label>
-                <input
-                  type="number"
-                  name="taxPercentage"
-                  value={formData.taxPercentage}
-                  onChange={handleTaxChange}
-                  required
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter product name"
-                />
-              </div> */}
-
               <div>
                 <label className="block text-sm font-medium text-gray-200 mb-2"> Serving Price </label>
                 <input
@@ -365,14 +368,23 @@ const PostProductsPage = () => {
                 <label className="block text-sm font-medium text-gray-200 mb-2">GST</label>
                 <select
                   name="taxPercentage"
-                  value={servingPrice}
-                  onChange={setServingPrice}
+                  value={formData.taxPercentage}
+                  onChange={(e) => {
+                    const { name, value } = e.target;
+                    setFormData({ ...formData, [name]: parseFloat(value) });
+                  }}
                   className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="">Select Tax Percentage</option>
-                  {availableGsts.map((gst, index) => (
-                    <option key={index} value={gst}>{gst}%</option>
-                  ))}
+                  <option value={formData.taxPercentage}>{formData.taxPercentage === 0 ? "Select Tax Percentage" : formData.taxPercentage} %</option>
+                  {availableGsts.map((gst, index) => {
+                    console.log("GST: ", gst);
+                    console.log("GST Index: ", index);
+
+                    return (
+                      <option key={index} value={gst}> {gst}%</option>
+                      // <option key={index} value={null}> {gst}%</option>
+                    )
+                  })}
                 </select>
               </div>
 
@@ -380,11 +392,89 @@ const PostProductsPage = () => {
 
             {/* Attributes */}
 
+
             {formData.attributesJson.map((attribute, index) => (
-              <div key={index}>
+
+
+              <div key={index} style={{ backgroundColor: "#211e1e", padding: "10px", borderRadius: "10px", marginBottom: "10px" }}>
 
                 <h4 className="text-sm text-gray-300 mb-2">Varient {index + 1}</h4>
-                <div className="mb-2 flex space-x-4">
+
+                {attribute.fields.map((field, fieldIndex) => (
+                  <div key={fieldIndex} className="flex space-x-4 mb-2" style={{ width: "30%" }}>
+
+                    {/* Field Key */}
+                    <select
+                      value={field.name}
+                      onChange={(e) =>
+                        handleNestedChange(
+                          index,
+                          fieldIndex,
+                          "name",
+                          e.target.value
+                        )
+                      }
+                      className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Select Field Key</option>
+                      {availableFields.map(({ keyName }) => (
+                        <option key={keyName} value={keyName}>
+                          {keyName}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Field Value */}
+                    <select
+                      value={field.value}
+                      onChange={(e) =>
+                        handleNestedChange(
+                          index,
+                          fieldIndex,
+                          "value",
+                          e.target.value
+                        )
+                      }
+                      className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Select Field Value</option>
+                      {availableFields
+                        .find(({ keyName }) => keyName === field.name)
+                        ?.fieldValues.map(({ valueName }) => {
+                          console.log("valueName: ", valueName);
+                          return (
+                            <option key={valueName} value={valueName} style={{ backgroundColor: valueName }}>
+                              {/* // <option key={valueName} value={valueName}> */}
+                              {valueName}
+                            </option>
+                          )
+                        })}
+                    </select>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRevomeField(index, fieldIndex)}
+                      className="text-red-500 text-sm"
+                      style={{ backgroundColor: "red", borderRadius: "5px", color: "white", padding: "5px" }}
+                    >
+                      Remove
+                    </button>
+
+                  </div>
+
+                ))}
+
+                <button
+                  type="button"
+                  onClick={() => handleAddField(index)}
+                  className="text-blue-500 text-sm"
+                >
+                  + Add Field
+                </button>
+
+
+
+                <div className="mb-2 flex space-x-4 items-center">
 
                   <div>
                     <label className="block text-sm text-gray-200">Price</label>
@@ -432,63 +522,20 @@ const PostProductsPage = () => {
                       setFormData({ ...formData, attributesJson: updatedAttributes });
                     }} className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 p-2" />
                   </div>
+
+
+
                 </div>
 
-                {attribute.fields.map((field, fieldIndex) => (
-                  <div key={fieldIndex} className="flex space-x-4 mb-2" style={{ width: "30%" }}>
-                    {/* Field Key */}
-                    <select
-                      value={field.name}
-                      onChange={(e) =>
-                        handleNestedChange(
-                          index,
-                          fieldIndex,
-                          "name",
-                          e.target.value
-                        )
-                      }
-                      className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">Select Field Key</option>
-                      {availableFields.map(({ keyName }) => (
-                        <option key={keyName} value={keyName}>
-                          {keyName}
-                        </option>
-                      ))}
-                    </select>
-
-                    {/* Field Value */}
-                    <select
-                      value={field.value}
-                      onChange={(e) =>
-                        handleNestedChange(
-                          index,
-                          fieldIndex,
-                          "value",
-                          e.target.value
-                        )
-                      }
-                      className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">Select Field Value</option>
-                      {availableFields
-                        .find(({ keyName }) => keyName === field.name)
-                        ?.fieldValues.map(({ valueName }) => (
-                          <option key={valueName} value={valueName}>
-                            {valueName}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                ))}
-
+                {/* remove attribute */}
                 <button
                   type="button"
-                  onClick={() => handleAddField(index)}
-                  className="text-blue-500 text-sm"
+                  onClick={() => handleRemoveAttribute(index)}
+                  className="text-red-500 text-sm"
                 >
-                  + Add Field
+                  - Remove Varient
                 </button>
+
               </div>
             ))}
 
